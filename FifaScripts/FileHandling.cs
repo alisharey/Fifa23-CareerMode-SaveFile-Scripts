@@ -1,12 +1,6 @@
-﻿using System;
-using System.IO;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using FifaLibrary;
+﻿using FifaLibrary;
 using System.Data;
-using System.Windows.Forms;
+
 
 namespace Fifa_Career_Script
 {
