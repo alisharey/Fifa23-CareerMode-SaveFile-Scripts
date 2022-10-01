@@ -23,7 +23,7 @@ namespace Fifa_23_Scripts
             _fileHandling = new FileHandling();
             statusTextBox.Text = "Loading File ...";
             int ret = _fileHandling.Load();
-            if (ret != 0) statusTextBox.Text = "Error while loading/No File";
+            if (ret != 0) statusTextBox.Text = "Error: Incompatiable/No Chosen File";
             else
             {
                 statusTextBox.Text = "Loading Complete";
@@ -76,7 +76,5 @@ namespace Fifa_23_Scripts
             statusTextBox.Text = "Error: Load Career File First";
 
         }
-
-
     }
 }

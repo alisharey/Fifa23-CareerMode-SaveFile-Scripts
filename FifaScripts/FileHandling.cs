@@ -7,8 +7,7 @@ namespace Fifa_Career_Script
     public class FileHandling
     {
         string m_FifaDbFileName;
-        string m_FifaDbXmlFileName;
-        string m_InternalFileName;
+        string m_FifaDbXmlFileName;    
         string m_InternalFile;        
         DbFile m_FifaDb;
         DataSet m_DataSet;
@@ -37,19 +36,15 @@ namespace Fifa_Career_Script
             {
                 this.m_InternalFile = openDialog.FileName;
             }
-
-            if (string.IsNullOrEmpty(this.m_InternalFile))
-            {
-               
-                //Console.WriteLine("File Not Loaded");
-                return -1;
-            }
+            if (string.IsNullOrEmpty(this.m_InternalFile)) return -1;  
             
-                     
-           
-            //LoadDb(); //not needed probably
             LoadEA();
             return 0;
+        }
+
+        public void Save()
+        {
+            SaveEA();
         }
         public void LoadDb()
         {
@@ -61,13 +56,14 @@ namespace Fifa_Career_Script
 
         private void LoadEA()
         {
-           // Console.WriteLine("Loading Career File...");
+          
             this.m_CareerFile = new CareerFile(m_InternalFile, this.m_FifaDbXmlFileName);
-            var x = this.m_CareerFile.InGameName;
-            m_DataSetEa = this.m_CareerFile.ConvertToDataSet();            
+            m_DataSetEa = this.m_CareerFile.ConvertToDataSet();
+            //var x = this.m_CareerFile.InGameName;
+
         }
         
-        public void Save()
+        public void SaveEA()
         {
             var text  = "Saving ...";            
             //Console.WriteLine(text);         
