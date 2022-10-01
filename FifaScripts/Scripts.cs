@@ -95,19 +95,20 @@ namespace Fifa_Career_Script
         }
         private static DataRowCollection GetAllPlayerInfo(DataSet[] dataSetCollection)
         {
-            return dataSetCollection[1].Tables["players"].Rows;
+            
+            return dataSetCollection[1].Tables["players"].Rows; 
         }
         public void MyTeamPlayersto99()
         {
 
             foreach (DataRow _player in _allplayerInfo)
             {
-                string playerID = _player["playerid"].ToString();
+                string? playerID = _player["playerid"].ToString();
                 if (myTeamPlayerIDs.Contains(playerID))
                 {
                     foreach (string stat in PlayerStats)
                     {
-                        _player[stat] = 77;
+                        _player[stat] = 99;
                         //Console.WriteLine($" setting Player : {playerID}, {stat} == 99");
                     }
                 }

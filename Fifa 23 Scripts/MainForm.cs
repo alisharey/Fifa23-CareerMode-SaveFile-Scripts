@@ -30,15 +30,6 @@ namespace Fifa_23_Scripts
                 _scripts = new Scripts(_fileHandling);
                 this.IsFileLoaded = true;
             }
-
-
-
-
-
-
-
-            //Console.WriteLine("File Saved.");
-            //Console.Read();
         }
 
         private void ApplyScript1Button_Click(object sender, EventArgs e)

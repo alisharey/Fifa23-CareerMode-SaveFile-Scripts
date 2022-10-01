@@ -128,6 +128,7 @@
             // statusTextBox
             // 
             this.statusTextBox.BackColor = System.Drawing.Color.LightGray;
+            this.statusTextBox.Enabled = false;
             this.statusTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.statusTextBox.ForeColor = System.Drawing.Color.DimGray;
             this.statusTextBox.Location = new System.Drawing.Point(90, 375);
@@ -136,6 +137,7 @@
             this.statusTextBox.ReadOnly = true;
             this.statusTextBox.Size = new System.Drawing.Size(292, 24);
             this.statusTextBox.TabIndex = 6;
+            this.statusTextBox.TabStop = false;
             // 
             // panel1
             // 
@@ -196,7 +198,9 @@
             this.MainMenuStrip = this.menuStrip1;
             this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MaximizeBox = false;
+            this.MaximumSize = new System.Drawing.Size(496, 459);
             this.MinimizeBox = false;
+            this.MinimumSize = new System.Drawing.Size(496, 459);
             this.Name = "MainForm";
             this.Text = "FIFA 23 CareerMode Scripts";
             this.menuStrip1.ResumeLayout(false);
