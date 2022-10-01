@@ -1,0 +1,41 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <UseWindowsForms>true</UseWindowsForms>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Data\FifaControls.dll" />
+    <None Remove="Data\FifaLibrary19.dll" />
+    <None Remove="Data\fifa_ng_db-meta.XML" />
+    <None Remove="Data\fifa_ng_db.DB" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Data\FifaControls.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\FifaLibrary19.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\fifa_ng_db-meta.XML">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\fifa_ng_db.DB">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="FifaControls">
+      <HintPath>Data\FifaControls.dll</HintPath>
+    </Reference>
+    <Reference Include="FifaLibrary19">
+      <HintPath>Data\FifaLibrary19.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+</Project>
