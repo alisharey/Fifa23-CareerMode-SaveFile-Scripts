@@ -1,7 +1,7 @@
 ﻿using System.Data;
 
 
-namespace Fifa_Career_Script
+namespace FIFA23.Scripts
 {
 
     public class Scripts
