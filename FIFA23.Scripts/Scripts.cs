@@ -120,7 +120,7 @@ namespace FIFA23.Scripts
                 string? playerID = _player["playerid"].ToString();
                 if (myTeamPlayerIDs.Contains(playerID))
                 {
-                    if(stat == "birthdate") _player["birthdate"] = 155185 + (this.season * 365);
+                    if(stat == "birthdate") _player[stat] = 155185 + (this.season * 365);
                     else _player[stat] = 99;
 
                 }
