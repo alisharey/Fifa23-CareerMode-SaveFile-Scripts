@@ -41,7 +41,7 @@
                             <ColumnDefinition Width="2*" />
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
-                        <ui:Card Content="Set All Players to 99 (User team)"  Grid.Column="0"  Foreground="#FF39393A" FontFamily="Times New Roman"   VerticalContentAlignment="Center"  FontSize="13" Margin="20,10,0,0" HorizontalAlignment="Left" BorderThickness="1,3,1,1" VerticalAlignment="Top" Width="243" FontWeight="Bold"/>
+                        <ui:Card Content="Set Players Potential to 99 (User team)"  Grid.Column="0"  Foreground="#FF39393A" FontFamily="Times New Roman"   VerticalContentAlignment="Center"  FontSize="13" Margin="20,10,0,0" HorizontalAlignment="Left" BorderThickness="1,3,1,1" VerticalAlignment="Top" Width="243" FontWeight="Bold"/>
 
                         <ui:Button x:Name="ApplyButtonOverAllScript"    Grid.Column="1" Content="Apply" Height="32" Width="90" Appearance="Info" Background="#FF39393A" FontFamily="Algerian" Click="ApplyButtonOverAllScript_Click"  >
                             <ui:Button.MouseOverBackground>

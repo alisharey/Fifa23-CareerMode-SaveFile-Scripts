@@ -1,4 +1,5 @@
 ﻿using System.Data;
+using static System.Windows.Forms.AxHost;
 
 
 namespace FIFA23.Scripts
@@ -12,50 +13,72 @@ namespace FIFA23.Scripts
         private DataRowCollection _allplayerInfo;
         static List<string> PlayerStats = new List<string>
             {
-                "overallrating",
-                "potential",
+                   "overallrating",
+                   "potential",
+                   
+                   //Pace 
+                   "acceleration",
+                   "sprintspeed",
+                  
+                  //Shooting
+                   "positioning",
+                   "finishing",
+                   "shotpower",
+                   "longshots",
+                   "volleys",
+                   "penalties",
 
-                //Skill
-                "crossing",
-                "dribbling",
-                "curve",
-                "freekickaccuracy",
-                "longpassing",
-                "ballcontrol",
+                   //Passing
+                    "vision",
+                    "crossing",
+                    "freekickaccuracy",
+                    "shortpassing",
+                    "longpassing",
+                    "curve",
 
-                // Movement
-                "acceleration",
-                "sprintspeed",
-                "agility",
-                "reactions",
-                "balance",
+                   //Dribbling
+                    "agility",
+                    "balance",
+                    "reactions",
+                    "ballcontrol",
+                    "dribbling",
+                    "composure",
+                  
+                    //Defending
+                     "interceptions",
+                     "defensiveawareness",
+                     "standingtackle",
+                     "slidingtackle",
+                     "headingaccuracy",
+                    
+                     //Physicality
+                     "jumping",
+                     "stamina",
+                     "strength",
+                     "aggression",
 
-                // POWER
-                "shotpower",
-                "jumping",
-                "stamina",
-                "strength",
-                "longshots",
 
-                // MENTALITY
-                "aggression",
-                "interceptions",
-                "positioning",
-                "vision",
-                "penalties",
-                "composure",
-                
-                // DEFENDING
-                "defensiveawareness",
-                "standingtackle",
-                "slidingtackle",
+                    //GK
+                     "gkdiving",
+                     "gkhandling",
+                     "gkkicking",
+                     "gkpositioning",
+                     "gkreflexes",
 
-                // GOALKEEPING
-                "gkdiving",
-                "gkhandling",
-                "gkkicking",
-                "gkpositioning",
-                "gkreflexes",
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -90,21 +113,39 @@ namespace FIFA23.Scripts
         }
         private static DataRowCollection GetAllPlayerInfo(DataSet[] dataSetCollection)
         {
-            
-            return dataSetCollection[1].Tables["players"].Rows; 
-        }
-        public void MyTeamPlayersto99()
-        {
 
+            return dataSetCollection[1].Tables["players"].Rows;
+        }
+
+        public void UserTeamSingleStatScript(string stat)
+        {
             foreach (DataRow _player in _allplayerInfo)
             {
                 string? playerID = _player["playerid"].ToString();
                 if (myTeamPlayerIDs.Contains(playerID))
                 {
+                    if(stat == "birthdate") _player["birthdate"] = 155185;
+                    else _player[stat] = 99;
+
+                }
+
+
+            }
+        }
+        public void TempScriptForAllStats()
+        {
+            foreach (DataRow _player in _allplayerInfo)
+            {
+                string? playerID = _player["playerid"].ToString();
+                if (myTeamPlayerIDs.Contains(playerID))
+                {
+                   
+
                     foreach (string stat in PlayerStats)
                     {
+
                         _player[stat] = 99;
-                        //Console.WriteLine($" setting Player : {playerID}, {stat} == 99");
+
                     }
                 }
 
@@ -112,24 +153,10 @@ namespace FIFA23.Scripts
             }
 
 
-            // Console.WriteLine("Script Excuted");     
+
+
         }
 
-        public void MyTeamPlayerAgeTo15()
-        {
-            foreach (DataRow _player in _allplayerInfo)
-            {
-                string playerID = _player["playerid"].ToString();
-                if (myTeamPlayerIDs.Contains(playerID))
-                {
-                    _player["birthdate"] = 155185;
-
-                }
-
-
-            }
-
-        }
 
 
     }

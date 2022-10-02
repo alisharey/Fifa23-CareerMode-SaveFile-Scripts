@@ -8,8 +8,8 @@ namespace FIFA23.Scripts
     public class FileHandling
     {
         string m_FifaDbFileName;
-        string m_FifaDbXmlFileName;    
-        string m_InternalFile;        
+        string m_FifaDbXmlFileName;
+        string m_InternalFile;
         DbFile m_FifaDb;
         DataSet m_DataSet;
         CareerFile m_CareerFile;
@@ -17,7 +17,7 @@ namespace FIFA23.Scripts
 
 
         public FileHandling()
- 
+
         {
 
             this.m_FifaDbFileName = Path.Combine(Environment.CurrentDirectory, @"Data\", "fifa_ng_db.db");
@@ -37,8 +37,8 @@ namespace FIFA23.Scripts
             {
                 this.m_InternalFile = openDialog.FileName;
             }
-            if (string.IsNullOrEmpty(this.m_InternalFile)) return -1;  
-            
+            if (string.IsNullOrEmpty(this.m_InternalFile)) return -1;
+
             LoadEA();
             return 0;
         }
@@ -49,35 +49,42 @@ namespace FIFA23.Scripts
         }
         public void LoadDb()
         {
-           
+
             m_FifaDb = new DbFile(this.m_FifaDbFileName, this.m_FifaDbXmlFileName);
             this.m_DataSet = this.m_FifaDb.ConvertToDataSet();
-            
+
         }
 
         private void LoadEA()
         {
-          
+
             this.m_CareerFile = new CareerFile(m_InternalFile, this.m_FifaDbXmlFileName);
             m_DataSetEa = this.m_CareerFile.ConvertToDataSet();
             //var x = this.m_CareerFile.InGameName;
 
         }
-        
+
         public void SaveEA()
         {
-                  
+
             //Console.WriteLine(text);         
-            this.m_CareerFile.ConvertFromDataSet(this.m_DataSetEa);      
-            string backupFileName = this.m_CareerFile.FileName + "_Backup";
-            
-            while(File.Exists(backupFileName))
+            this.m_CareerFile.ConvertFromDataSet(this.m_DataSetEa);
+            var directoryName = Path.GetDirectoryName(this.m_CareerFile.FileName);
+            var fileName = Path.GetFileName(this.m_CareerFile.FileName);
+            string backupFileName;
+            var i = 0;
+            do
             {
-                backupFileName += 1;
-            }            
-            File.Copy(this.m_CareerFile.FileName, backupFileName, true);          
+                backupFileName = directoryName + $"\\Backup{i}_" + fileName;
+                i++;
+                
+
+            }
+            while (File.Exists(backupFileName));            
+
+            File.Copy(this.m_CareerFile.FileName, backupFileName, true);
             this.m_CareerFile.SaveEa(this.m_CareerFile.FileName);
-             
+
         }
     }
 }

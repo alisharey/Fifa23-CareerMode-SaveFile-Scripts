@@ -37,8 +37,8 @@ public partial class MainWindow : Wpf.Ui.Controls.UiWindow
     {
         if (IsFileLoaded)
         {
-            _scripts.MyTeamPlayersto99();
-            statusTextBox.Text = "Script MyTeamPlayersto99 executed.";
+            _scripts.UserTeamSingleStatScript("potential");
+            statusTextBox.Text = "Script Pot_to99 executed.";
         }
         else
         {
@@ -51,7 +51,7 @@ public partial class MainWindow : Wpf.Ui.Controls.UiWindow
     {
         if (IsFileLoaded)
         {
-            _scripts.MyTeamPlayerAgeTo15();
+            _scripts.UserTeamSingleStatScript("birthdate");
             statusTextBox.Text = "Script MyTeamPlayerAgeTo15 executed.";
         }
         else
