@@ -9,6 +9,7 @@ namespace FIFA23.Scripts
     {
         private DataSet[] dataSetCollection;
         private string myteamid;
+        private int season;
         private List<string> myTeamPlayerIDs;
         private DataRowCollection _allplayerInfo;
         static List<string> PlayerStats = new List<string>
@@ -64,38 +65,29 @@ namespace FIFA23.Scripts
                      "gkkicking",
                      "gkpositioning",
                      "gkreflexes",
+        };
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-            };
+        
         public Scripts(FileHandling File)
         {
             this.dataSetCollection = File.m_DataSetEa;
             this.myteamid = GetMyTeamID(dataSetCollection);
+            this.season = int.Parse(GetSeasonCount(dataSetCollection))  - 1;
             this.myTeamPlayerIDs = GetMyTeamPlayerIDs(dataSetCollection, myteamid);
             this._allplayerInfo = GetAllPlayerInfo(dataSetCollection);
         }
+
+        #region Private/Internal Methods
 
         private string GetMyTeamID(DataSet[] dataSetCollection)
         {
             return dataSetCollection[0].Tables["career_users"].Rows[0]["clubteamid"].ToString();
         }
+        private string GetSeasonCount(DataSet[] dataSetCollection)
+        {
+            return dataSetCollection[0].Tables["career_users"].Rows[0]["seasoncount"].ToString();
+        }
+
         private List<string> GetMyTeamPlayerIDs(DataSet[] dataSetCollection, string myTeamID)
         {
             var tempPlayerList = new List<string>();
@@ -117,6 +109,10 @@ namespace FIFA23.Scripts
             return dataSetCollection[1].Tables["players"].Rows;
         }
 
+        #endregion
+
+        #region Public Scripts
+
         public void UserTeamSingleStatScript(string stat)
         {
             foreach (DataRow _player in _allplayerInfo)
@@ -124,7 +120,7 @@ namespace FIFA23.Scripts
                 string? playerID = _player["playerid"].ToString();
                 if (myTeamPlayerIDs.Contains(playerID))
                 {
-                    if(stat == "birthdate") _player["birthdate"] = 155185;
+                    if(stat == "birthdate") _player["birthdate"] = 155185 + (this.season * 365);
                     else _player[stat] = 99;
 
                 }
@@ -157,6 +153,7 @@ namespace FIFA23.Scripts
 
         }
 
+        #endregion
 
 
     }

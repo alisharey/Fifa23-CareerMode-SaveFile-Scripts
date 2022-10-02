@@ -26,7 +26,7 @@
 
 
             <Menu Grid.Row="0" Grid.ColumnSpan="2" Height="48" Name="menu1" Width="496" HorizontalAlignment="Left" VerticalAlignment="Top" BorderThickness="1,1,1,1" RenderTransformOrigin="0.817,7.003" Foreground="#FFF9F9F9" Background="#FF39393A" ClipToBounds="True">
-                <ui:MenuItem x:Name="File" Header="_File" Margin="10,0,0,0" VerticalAlignment="Top"  Background="#FFFBFBFB" StaysOpenOnClick="True">
+                <ui:MenuItem x:Name="File" Header="_File" Margin="10,0,0,0" VerticalAlignment="Top"  Background="#FFFBFBFB">
                     <ui:MenuItem x:Name="OpenButton" Header="_Open" Click="OpenButton_Click"/>
                     <ui:MenuItem x:Name="SaveButton" Header="_Save" Click="SaveButton_Click" />
                 </ui:MenuItem>
