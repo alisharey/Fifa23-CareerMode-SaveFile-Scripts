@@ -16,11 +16,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\FifaScripts\FifaScripts.csproj" />
+    <ProjectReference Include="..\FIFA23.Scripts\FIFA23.Scripts.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <Resource Include="icons8-script-64.png" />
+    <Resource Include="icons8-script-64.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
   </ItemGroup>
 
 </Project>

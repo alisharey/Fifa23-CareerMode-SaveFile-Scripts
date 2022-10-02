@@ -75,10 +75,16 @@ public partial class MainWindow : Wpf.Ui.Controls.UiWindow
 
     private void SaveButton_Click(object sender, RoutedEventArgs e)
     {
+        statusTextBox.Text = "Saving File ...";
         if (IsFileLoaded)
         {
+            
             _fileHandling.Save();
             statusTextBox.Text = "Save Complete";
+        }
+        else
+        {
+            statusTextBox.Text = "File Does Not Exist";
         }
 
     }

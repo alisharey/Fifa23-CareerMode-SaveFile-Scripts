@@ -66,29 +66,16 @@ namespace FIFA23.Scripts
         
         public void SaveEA()
         {
-            var text  = "Saving ...";            
+                  
             //Console.WriteLine(text);         
-            this.m_CareerFile.ConvertFromDataSet(this.m_DataSetEa);            
-            string directoryName = Path.GetDirectoryName(this.m_CareerFile.FileName);
-            string fileName = Path.GetFileName(this.m_CareerFile.FileName);
-            for (int i = 1; i <= 99; i++)
+            this.m_CareerFile.ConvertFromDataSet(this.m_DataSetEa);      
+            string backupFileName = this.m_CareerFile.FileName + "_Backup";
+            
+            while(File.Exists(backupFileName))
             {
-                text = string.Concat(new string[]
-                {
-            directoryName,
-            "\\_",
-            i.ToString(),
-            "_",
-            fileName
-                });
-                if (!File.Exists(text))
-                {
-                    break;
-                }
-            }
-            File.Copy(this.m_CareerFile.FileName, text, true);
-            fileName.StartsWith("Squad");
-            fileName.StartsWith("Career");
+                backupFileName += 1;
+            }            
+            File.Copy(this.m_CareerFile.FileName, backupFileName, true);          
             this.m_CareerFile.SaveEa(this.m_CareerFile.FileName);
              
         }
