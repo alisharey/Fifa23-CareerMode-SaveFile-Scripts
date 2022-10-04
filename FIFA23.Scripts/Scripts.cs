@@ -7,12 +7,16 @@ namespace FIFA23.Scripts
 
     public class Scripts
     {
-        private DataSet[] dataSetCollection;
+        private int IndexOffset;
+        private DataSet[] dataSetCollection { get; set; }
+        private DataRowCollection AllplayerInfo;
+        private DataRowCollection Teamplayerlinks;
+
         private string myteamid;
         private int season;
-        private List<string> myTeamPlayerIDs;
-        private DataRowCollection _allplayerInfo;
-        static List<string> PlayerStats = new List<string>
+        private FileType m_FileType;
+        private List<string> MyTeamPlayerIDs;
+        private static List<string> PlayerStats = new List<string>
             {
                    "overallrating",
                    "potential",
@@ -66,30 +70,38 @@ namespace FIFA23.Scripts
                      "gkpositioning",
                      "gkreflexes",
         };
-
-        
         public Scripts(FileHandling File)
         {
             this.dataSetCollection = File.m_DataSetEa;
-            this.myteamid = GetMyTeamID(dataSetCollection);
-            this.season = int.Parse(GetSeasonCount(dataSetCollection))  - 1;
-            this.myTeamPlayerIDs = GetMyTeamPlayerIDs(dataSetCollection, myteamid);
-            this._allplayerInfo = GetAllPlayerInfo(dataSetCollection);
+            this.m_FileType = File.Type;
+            if (m_FileType == FileType.Career)
+            {
+                IndexOffset = 1;
+                this.myteamid = GetMyTeamID();
+                this.MyTeamPlayerIDs = GetMyTeamPlayerIDs(myteamid);
+            }
+            else IndexOffset = 0;          
+          
+            this.AllplayerInfo = GetAllPlayerInfo();
+            this.Teamplayerlinks = GetTeamPlayerLinks();
+          
+
         }
 
         #region Private/Internal Methods
 
-        private string GetMyTeamID(DataSet[] dataSetCollection)
+        private string GetMyTeamID()
         {
+            if (this.m_FileType != FileType.Career) return null;
             return dataSetCollection[0].Tables["career_users"].Rows[0]["clubteamid"].ToString();
         }
-        private string GetSeasonCount(DataSet[] dataSetCollection)
+        private string GetSeasonCount()
         {
             return dataSetCollection[0].Tables["career_users"].Rows[0]["seasoncount"].ToString();
         }
-
-        private List<string> GetMyTeamPlayerIDs(DataSet[] dataSetCollection, string myTeamID)
+        private List<string> GetMyTeamPlayerIDs(string myTeamID)
         {
+            if (this.m_FileType != FileType.Career) return null;
             var tempPlayerList = new List<string>();
             DataRowCollection _playersContractInfo = dataSetCollection[0].Tables["career_playercontract"].Rows;
             foreach (DataRow _player in _playersContractInfo)
@@ -103,58 +115,135 @@ namespace FIFA23.Scripts
             }
             return tempPlayerList;
         }
-        private static DataRowCollection GetAllPlayerInfo(DataSet[] dataSetCollection)
+        private DataRowCollection GetAllPlayerInfo()
         {
+            return dataSetCollection[IndexOffset].Tables["players"].Rows;
 
-            return dataSetCollection[1].Tables["players"].Rows;
+
         }
+        private DataRowCollection GetTeamPlayerLinks()
+        {
+            return dataSetCollection[IndexOffset].Tables["teamplayerlinks"].Rows;
+
+        }
+
+        private void ImportData(CareerInfo careerInfo)
+        {
+           
+            this.AllplayerInfo = GetAllPlayerInfo();
+            this.Teamplayerlinks = GetTeamPlayerLinks();
+            this.AllplayerInfo.Clear();
+            this.Teamplayerlinks.Clear();
+            foreach (DataRow row in careerInfo.PlayersTable)
+            {
+                AllplayerInfo.Add(row.ItemArray);
+            }
+
+            foreach(DataRow row in careerInfo.TeamPlayerLinksTable)
+            {
+                Teamplayerlinks.Add(row.ItemArray);
+            }
+
+            //= careerInfo.PlayersTable;
+            
+
+
+        }
+
 
         #endregion
 
         #region Public Scripts
 
-        public void UserTeamSingleStatScript(string stat)
+        public CareerInfo ExportCareerInfo()
         {
-            foreach (DataRow _player in _allplayerInfo)
+
+            var careerInfo = new CareerInfo(myteamid, AllplayerInfo, Teamplayerlinks, MyTeamPlayerIDs);
+
+            return careerInfo;
+        }
+        public int ImportCareerInfo(CareerInfo careerInfo)
+        {
+
+            this.myteamid        = careerInfo.MyTeamID;
+            this.MyTeamPlayerIDs = careerInfo.MyTeamPlayerIDs;
+            ImportData(careerInfo);
+
+         
+
+            return 0;
+        }
+        public int UserTeamSingleStatScript(string stat)
+        {
+
+            var ret = CheckInvalidStat(stat);
+            if (ret == -1) return -1; //invalid stat 
+
+            foreach (DataRow _player in AllplayerInfo)
             {
                 string? playerID = _player["playerid"].ToString();
-                if (myTeamPlayerIDs.Contains(playerID))
+                if (MyTeamPlayerIDs.Contains(playerID))
                 {
-                    if(stat == "birthdate") _player[stat] = 155185 + (this.season * 365);
-                    else _player[stat] = 99;
+                    switch (ret)
+                    {
+                        case 1:
+                            _player[stat] = 99;
+                            break;
+
+                        case 2:
+                            this.season = int.Parse(GetSeasonCount()) - 1;
+                            _player[stat] = 155185 + (this.season * 365);
+                            break;
+                        default:
+                            ret = -1;
+                            return ret;
+
+                    }
+
+
 
                 }
 
 
             }
+            return ret;
         }
         public void TempScriptForAllStats()
         {
-            foreach (DataRow _player in _allplayerInfo)
+            foreach (DataRow _player in AllplayerInfo)
             {
-                string? playerID = _player["playerid"].ToString();
-                if (myTeamPlayerIDs.Contains(playerID))
+
+
+                foreach (string stat in PlayerStats)
                 {
-                   
 
-                    foreach (string stat in PlayerStats)
-                    {
+                    _player[stat] = 99;
 
-                        _player[stat] = 99;
-
-                    }
                 }
 
-
             }
-
-
-
 
         }
 
         #endregion
 
-
+        private int CheckInvalidStat(string stat)
+        {
+            int ret;
+            if (PlayerStats.Contains(stat))
+            {
+                ret = 1;
+            }
+            else if (stat == "birthdate")
+            {
+                ret = 2;
+            }
+            else
+            {
+                MessageBox.Show("Invalid Script/Stat Choice", "Invalid Choice", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                ret = -1;
+            }
+            return ret;
+        }
     }
 }

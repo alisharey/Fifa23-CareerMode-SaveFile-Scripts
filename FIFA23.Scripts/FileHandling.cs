@@ -15,6 +15,8 @@ namespace FIFA23.Scripts
         CareerFile m_CareerFile;
         public DataSet[] m_DataSetEa;
 
+        public FileType Type { get; set; }
+
 
         public FileHandling()
 
@@ -26,21 +28,44 @@ namespace FIFA23.Scripts
 
         }
 
+        
         public int Load()
         {
-            //getting the file name and path
+            int ret = 0;
+            this.m_InternalFile = string.Empty;            
+            //Open File Dialog to select file
             string userPath = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
             OpenFileDialog openDialog = new OpenFileDialog();
             openDialog.InitialDirectory = Path.Combine(userPath, @"OneDrive\Documents\FIFA 23\settings");
-
             if (DialogResult.OK == openDialog.ShowDialog())
             {
                 this.m_InternalFile = openDialog.FileName;
             }
-            if (string.IsNullOrEmpty(this.m_InternalFile)) return -1;
+            if (string.IsNullOrEmpty(this.m_InternalFile)) return -1; //if no file is selected
 
+
+            //check the file type 
+            var fileName =  Path.GetFileName(this.m_InternalFile);            
+            if (fileName.StartsWith("Squad"))
+
+            {
+                this.Type = FileType.Squad;
+            }
+            else if (fileName.StartsWith("Career"))
+            {
+                this.Type = FileType.Career;
+            }
+            else 
+            {
+                
+                MessageBox.Show("Select a file which starts with Squads or Career and try again");
+                ret = this.Load();
+                if(ret != 0) return ret;
+               
+            }
+            
             LoadEA();
-            return 0;
+            return ret;
         }
 
         public void Save()
@@ -57,10 +82,11 @@ namespace FIFA23.Scripts
 
         private void LoadEA()
         {
-
+             
             this.m_CareerFile = new CareerFile(m_InternalFile, this.m_FifaDbXmlFileName);
             m_DataSetEa = this.m_CareerFile.ConvertToDataSet();
-            //var x = this.m_CareerFile.InGameName;
+          
+
 
         }
 

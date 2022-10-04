@@ -1,89 +1,116 @@
-﻿<ui:UiWindow
+﻿<Window x:Class="FIFA23.Scripts.UI.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:FIFA23.Scripts.UI"
-        xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml" x:Class="FIFA23.Scripts.UI.MainWindow"
         mc:Ignorable="d"
-        Title="FIFA 23 Career Mode Scripts" Height="382" Width="490" Background="#FFEDE7E7" WindowCornerPreference="Default" ExtendsContentIntoTitleBar="False" Icon="/icons8-script-64.png" ResizeMode="NoResize" >
-    <Border BorderBrush="#FF03000C" BorderThickness="2">
-        <Border.Effect>
-            <DropShadowEffect/>
-        </Border.Effect>
-        <Grid Background="#FFF7F5F5">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="0.41*" />
-                <RowDefinition Height="2*" />
-                <RowDefinition Height="0.5*" />
+        xmlns:dragablz="clr-namespace:Dragablz;assembly=Dragablz"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        Height="584" Width="709" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" WindowStyle="None">
+    <Grid x:Name="WindowGrid">
 
+        <Grid x:Name="MenuGrid" Height="60" VerticalAlignment="Top" Background="#FF25012B">
+            <Menu Foreground="#FFEDE9E9" HorizontalContentAlignment="Center" HorizontalAlignment="Left" VerticalAlignment="Center" OverridesDefaultStyle="True" Width="80">
+                <MenuItem  Width="78" VerticalAlignment="Center" Background="#FF25012B" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" OverridesDefaultStyle="False" HorizontalAlignment="Center" Height="49">
+                    <MenuItem.Header>
+                        <TextBlock Text="File" Width="29" Margin="8,0,-14,0" FontFamily="Segoe UI" FontSize="15"/>
+                    </MenuItem.Header>
+                    <MenuItem x:Name="LoadButton"
+                        Header="Load"
+                        Icon="{materialDesign:PackIcon Kind=FileUpload}" Background="#FF25012B" Click="LoadButton_Click">
+                    </MenuItem>
 
-            </Grid.RowDefinitions>
+                    <MenuItem x:Name="SaveButton"  Header="Save"
+                        Icon="{materialDesign:PackIcon Kind=ContentSave}" Click="SaveButton_Click">
+                    </MenuItem>
+                </MenuItem>
 
-
-            <Menu Grid.Row="0" Grid.ColumnSpan="2" Height="48" Name="menu1" Width="496" HorizontalAlignment="Left" VerticalAlignment="Top" BorderThickness="1,1,1,1" RenderTransformOrigin="0.817,7.003" Foreground="#FFF9F9F9" Background="#FF39393A" ClipToBounds="True">
-                <ui:MenuItem x:Name="File" Header="_File" Margin="10,0,0,0" VerticalAlignment="Top"  Background="#FFFBFBFB">
-                    <ui:MenuItem x:Name="OpenButton" Header="_Open" Click="OpenButton_Click"/>
-                    <ui:MenuItem x:Name="SaveButton" Header="_Save" Click="SaveButton_Click" />
-                </ui:MenuItem>
-                <ui:MenuItem x:Name="ExitButton" Header="_Exit" Margin="10,0,0,0" Click="ExitButton_Click" />
 
             </Menu>
-            <Border Grid.ColumnSpan="2" Grid.Row="1" BorderBrush="#FF39393A" BorderThickness="2" Margin="25,40,25,0">
-                <StackPanel  Orientation="Vertical">
-
-                    <Grid Margin="0,10,0,0">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="2*" />
-                            <ColumnDefinition Width="*" />
-                        </Grid.ColumnDefinitions>
-                        <ui:Card Content="Set Players Potential to 99 (User team)"  Grid.Column="0"  Foreground="#FF39393A" FontFamily="Times New Roman"   VerticalContentAlignment="Center"  FontSize="13" Margin="20,10,0,0" HorizontalAlignment="Left" BorderThickness="1,3,1,1" VerticalAlignment="Top" Width="243" FontWeight="Bold"/>
-
-                        <ui:Button x:Name="ApplyButtonOverAllScript"    Grid.Column="1" Content="Apply" Height="32" Width="90" Appearance="Info" Background="#FF39393A" FontFamily="Algerian" Click="ApplyButtonOverAllScript_Click"  >
-                            <ui:Button.MouseOverBackground>
-                                <SolidColorBrush Color="#FF030C5A" Opacity="0.9"/>
-                            </ui:Button.MouseOverBackground>
-                            <ui:Button.Effect>
-                                <DropShadowEffect/>
-                            </ui:Button.Effect>
-                        </ui:Button>
-                    </Grid>
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="2*" />
-                            <ColumnDefinition Width="*" />
-                        </Grid.ColumnDefinitions>
-                        <ui:Card Content="Set All Players Age To 15 (User team)"  Grid.Column="0"  Foreground="#FF39393A" FontFamily="Times New Roman"   VerticalContentAlignment="Center"  FontSize="13" Margin="20,0,0,0" HorizontalAlignment="Left" BorderThickness="1,3,1,1" Width="243" FontWeight="Bold"/>
-
-                        <ui:Button x:Name="ApplyButtonAgeScript"   Grid.Column="1" Content="Apply" Height="32" Width="90" Appearance="Info" Background="#FF39393A" FontFamily="Algerian" Click="ApplyButtonAgeScript_Click"  >
-                            <ui:Button.MouseOverBackground>
-                                <SolidColorBrush Color="#FF030C5A" Opacity="0.9"/>
-                            </ui:Button.MouseOverBackground>
-                            <ui:Button.Effect>
-                                <DropShadowEffect/>
-                            </ui:Button.Effect>
-                        </ui:Button>
-                    </Grid>
-                </StackPanel>
-            </Border>
-
-            <Label Grid.Column ="0" Grid.Row="2" Content="Status:"  Margin="56,17,114,13"  Foreground="#FF39393A" Height="29" FontFamily="Algerian" VerticalContentAlignment="Center" FontSize="9"/>
-            <ui:TextBox x:Name="statusTextBox" Grid.Row="2" Grid.ColumnSpan="2" HorizontalAlignment="Left" Margin="98,0,0,0" TextWrapping="Wrap" Width="299" Background="#FF39393A" Height="34" OverridesDefaultStyle="True" IsReadOnly="True" ClearButtonEnabled="False" MinWidth="300" MaxWidth="302" ScrollViewer.CanContentScroll="True" UseLayoutRounding="True" Foreground="WhiteSmoke" FontSize="12" FontFamily="Arial" RenderTransformOrigin="0.5,0.5" IsEnabled="False"/>
-            <ui:TextBox x:Name="textBox" HorizontalAlignment="Left" Grid.Row="1" TextWrapping="Wrap" Text="Scripts"  Width="74" Foreground="White" Margin="10,20,0,0" VerticalAlignment="Top" Height="37" Background="#FF39393A" FontFamily="Algerian" FontSize="12" SelectionBrush="#FF01121F" IsReadOnly="True"  ClearButtonEnabled="False" IsEnabled="False" SelectionOpacity="1">
-                <ui:TextBox.Effect>
-                    <DropShadowEffect/>
-                </ui:TextBox.Effect>
-            </ui:TextBox>
-
-
-
-
-
-
+            <TextBlock Text="Fifa 23 Save File Scripts" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="22" FontFamily="Champagne &amp; Limousines" />
+            <Button x:Name="ShutDown" HorizontalAlignment="Right" VerticalAlignment="Center" Background="{x:Null}" BorderBrush="{x:Null}" Click="ShutDownButton_Click">
+                <materialDesign:PackIcon Kind="Power"/>
+            </Button>
         </Grid>
-    </Border>
-</ui:UiWindow>
+        <Grid x:Name="TabsGrid" Margin="0 60 0 0">
+            <dragablz:TabablzControl x:Name="MainTab" BorderBrush="#FF25012B" SelectionChanged="TabablzControl_SelectionChanged">
+                <dragablz:TabablzControl.InterTabController>
+                    <dragablz:InterTabController/>
+                </dragablz:TabablzControl.InterTabController>
+                <TabItem x:Name="HomeTab" Header="HOME">
+                    <Grid x:Name="HomeGrid" >
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"></ColumnDefinition>
+                            <ColumnDefinition Width="*"></ColumnDefinition>                           
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="5*"></RowDefinition>
+                            <RowDefinition Height="*"></RowDefinition>
+                        </Grid.RowDefinitions>
+
+                        <GroupBox x:Name="CareerScriptsBox" Style="{StaticResource MaterialDesignGroupBox}" 
+                                  materialDesign:ColorZoneAssist.Mode="PrimaryDark"
+                                  Grid.Row="0" Grid.Column="0" Header="Career File Scripts" Margin="16,25,16,25">
+                            <StackPanel x:Name="CareerScriptsStack" >
+
+                                <Grid x:Name="Script1" Margin="0,5,0,15">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="2*"></ColumnDefinition>
+                                        <ColumnDefinition Width="*"></ColumnDefinition>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Grid.Column="0"
+                                               HorizontalAlignment="Left"
+                                               VerticalAlignment="Center"
+                                               Style="{StaticResource MaterialDesignBody2TextBlock}"
+                                               Text="User Team Potenial to 99" Foreground="#FF25012B" Margin="10,0,0,0"
+                                        
+                                    />
+                                    <Button Grid.Column="1"                               
+                                        Style="{StaticResource MaterialDesignRaisedDarkButton}" 
+                                        ToolTip="None"
+                                        Content="Apply" Margin="0,0,10,0"/>
+                                </Grid>
+                                <Grid x:Name="Script2" Margin="0,0,0,23">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="2*"></ColumnDefinition>
+                                        <ColumnDefinition Width="*"></ColumnDefinition>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Grid.Column="0"
+                                               HorizontalAlignment="Left"
+                                               VerticalAlignment="Center"
+                                               Style="{StaticResource MaterialDesignBody2TextBlock}"
+                                               Text="User Team Age to 15" Foreground="#FF25012B" Margin="10,0,0,0"
+                                        
+                                    />
+                                    <Button Grid.Column="1"                               
+                                        Style="{StaticResource MaterialDesignRaisedDarkButton}" 
+                                        ToolTip="None"
+                                        Content="Apply" Margin="0,0,10,0"/>
+                                </Grid>
+
+
+                            </StackPanel>
+                            
+
+                        </GroupBox>
+                        <GroupBox x:Name="SquadScripsBox" Style="{StaticResource MaterialDesignGroupBox}" 
+                                  materialDesign:ColorZoneAssist.Mode="PrimaryDark"                            
+                                  Grid.Row="0"  Grid.Column="1" Header="Squad File Scripts" Margin="16,25,16,25">
+
+
+                        </GroupBox>
+
+
+                    </Grid>
+                </TabItem>              
+                <TabItem x:Name="GitHubTab">
+                    <TabItem.Header>
+                        <materialDesign:PackIcon Kind="Github" Foreground="{DynamicResource PrimaryHueLightBrush}"/>
+                    </TabItem.Header>
+                    <TextBlock Text="https://github.com/alisharey/Fifa23-CareerMode-SaveFile-Scripts" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                </TabItem>
+            </dragablz:TabablzControl>
+        </Grid>
+    </Grid>
+</Window>
