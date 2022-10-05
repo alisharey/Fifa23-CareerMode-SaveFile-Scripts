@@ -1,22 +1,18 @@
 ﻿using System;
-using System.Data;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Threading;
 using Microsoft.Win32;
 
 using FIFA23.Scripts;
-using System.ComponentModel;
 using Path = System.IO.Path;
 using MessageBox = System.Windows.MessageBox;
 using Application = System.Windows.Application;
-using System.Xml.Linq;
-using System.Windows.Threading;
+
+
 
 namespace FIFA23.Scripts.UI;
 
@@ -53,7 +49,7 @@ public partial class MainWindow : Window
     {
 
         #region File Dialog and type 
-        OpenFileDialog openDialog = new OpenFileDialog();
+        OpenFileDialog openDialog = new();
         string userPath = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
         openDialog.InitialDirectory = Path.Combine(userPath, @"OneDrive\Documents\FIFA 23\settings");
         openDialog.Title = title;
@@ -66,7 +62,7 @@ public partial class MainWindow : Window
         if (string.IsNullOrEmpty(_fileName)) return false;
 
         //check the file type 
-        var ret = false;
+        bool ret;
         var fileName = Path.GetFileName(_fileName);
         if (fileName.StartsWith("Squad"))
 

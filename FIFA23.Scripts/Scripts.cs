@@ -88,8 +88,8 @@ namespace FIFA23.Scripts
 
         }
 
-        #region Private/Internal Methods
 
+        #region  Getters
         private string GetMyTeamID()
         {
             if (this.m_FileType != FileType.Career) return null;
@@ -126,53 +126,11 @@ namespace FIFA23.Scripts
             return dataSetCollection[IndexOffset].Tables["teamplayerlinks"].Rows;
 
         }
-
-        private void ImportData(CareerInfo careerInfo)
-        {
-           
-            this.AllplayerInfo = GetAllPlayerInfo();
-            this.Teamplayerlinks = GetTeamPlayerLinks();           
-
-           
-            foreach (DataRow row in careerInfo.PlayersTable)
-            {
-                AllplayerInfo.RemoveAt(0);
-                AllplayerInfo.Add(row.ItemArray);
-            }
-
-            foreach(DataRow row in careerInfo.TeamPlayerLinksTable)
-            {
-                Teamplayerlinks.RemoveAt(0);
-                Teamplayerlinks.Add(row.ItemArray);             
-            }
-
-            //= careerInfo.PlayersTable;
-            
-
-
-        }
-        private int CheckInvalidStat(string stat)
-        {
-            int ret;
-            if (PlayerStats.Contains(stat))
-            {
-                ret = 1;
-            }
-            else if (stat == "birthdate")
-            {
-                ret = 2;
-            }
-            else
-            {
-                MessageBox.Show("Invalid Script/Stat Choice", "Invalid Choice", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                ret = -1;
-            }
-            return ret;
-        }
-
         #endregion
 
-        #region Public Scripts
+
+
+
 
         public CareerInfo ExportCareerInfo()
         {
@@ -191,6 +149,49 @@ namespace FIFA23.Scripts
          
 
             return 0;
+        }
+        private void ImportData(CareerInfo careerInfo)
+        {
+
+            this.AllplayerInfo = GetAllPlayerInfo();
+            this.Teamplayerlinks = GetTeamPlayerLinks();
+
+
+            foreach (DataRow row in careerInfo.PlayersTable)
+            {
+                AllplayerInfo.RemoveAt(0);
+                AllplayerInfo.Add(row.ItemArray);
+            }
+
+            foreach (DataRow row in careerInfo.TeamPlayerLinksTable)
+            {
+                Teamplayerlinks.RemoveAt(0);
+                Teamplayerlinks.Add(row.ItemArray);
+            }
+
+            //= careerInfo.PlayersTable;
+
+
+
+        }
+
+        private int CheckInvalidStat(string stat)
+        {
+            int ret;
+            if (PlayerStats.Contains(stat))
+            {
+                ret = 1;
+            }
+            else if (stat == "birthdate")
+            {
+                ret = 2;
+            }
+            else
+            {
+                MessageBox.Show("Invalid Script/Stat Choice", "Invalid Choice", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                ret = -1;
+            }
+            return ret;
         }
         public int UserTeamSingleStatScript(string stat) // RE DO?
         {
@@ -227,6 +228,8 @@ namespace FIFA23.Scripts
             }
             return ret;
         }
+        
+
         public void ScriptSelector(bool IsUserTeam, List<string>? _myTeamPLayerIDs, bool IsSingleStat,string selectedStat = "")
         {
             var value = 99;
@@ -289,7 +292,6 @@ namespace FIFA23.Scripts
 
         
 
-        #endregion
 
        
     }

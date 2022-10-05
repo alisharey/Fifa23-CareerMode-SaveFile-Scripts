@@ -5,6 +5,7 @@
     <TargetFramework>net6.0-windows</TargetFramework>
     <Nullable>enable</Nullable>
     <UseWPF>true</UseWPF>
+    <ApplicationIcon>Icon.ico</ApplicationIcon>   
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -16,8 +17,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="icons8-script-64.png" />
+    <None Remove="Icon.png" />
   </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Icon.ico" />
+  </ItemGroup>
+  
 
   <ItemGroup>
     <PackageReference Include="Dragablz" Version="0.0.3.234" />
@@ -29,9 +35,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Resource Include="icons8-script-64.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Resource>
+    <Resource Include="Icon.png" />
   </ItemGroup>
 
 </Project>

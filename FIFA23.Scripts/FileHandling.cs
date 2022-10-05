@@ -13,8 +13,8 @@ namespace FIFA23.Scripts
         DbFile m_FifaDb;
         DataSet m_DataSet;
         CareerFile m_CareerFile;
-        public DataSet[] m_DataSetEa;
 
+        public DataSet[] m_DataSetEa;
         public FileType Type { get; set; }
         
         
