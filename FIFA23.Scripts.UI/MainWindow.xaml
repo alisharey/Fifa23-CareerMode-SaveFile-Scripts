@@ -66,12 +66,13 @@
                                                Text="User Team Potenial to 99" Foreground="#FF25012B" Margin="10,0,0,0"
                                         
                                     />
-                                    <Button Grid.Column="1"                               
+                                    <Button x:Name="CareerScript1Button" Grid.Column="1"                               
                                         Style="{StaticResource MaterialDesignRaisedDarkButton}" 
-                                        ToolTip="None"
-                                        Content="Apply" Margin="0,0,10,0"/>
+                                        materialDesign:ButtonAssist.CornerRadius="5"
+                                        ToolTip="Sets all your team players&#x0a; potential to 99"
+                                        Content="Apply" Margin="0,0,10,0" Click="CareerScript1Button_Click"/>
                                 </Grid>
-                                <Grid x:Name="Script2" Margin="0,0,0,23">
+                                <Grid x:Name="Script2" Margin="0,0,0,15">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="2*"></ColumnDefinition>
                                         <ColumnDefinition Width="*"></ColumnDefinition>
@@ -83,12 +84,13 @@
                                                Text="User Team Age to 15" Foreground="#FF25012B" Margin="10,0,0,0"
                                         
                                     />
-                                    <Button Grid.Column="1"                               
+                                    <Button x:Name="CareerScrip2Button" Grid.Column="1"                               
                                         Style="{StaticResource MaterialDesignRaisedDarkButton}" 
-                                        ToolTip="None"
-                                        Content="Apply" Margin="0,0,10,0"/>
-                                </Grid>
-
+                                        materialDesign:ButtonAssist.CornerRadius="5"
+                                            
+                                        ToolTip="Sets all your team players&#x0a;Age to 15"
+                                        Content="Apply" Margin="0,0,10,0" Click="CareerScript2Button_Click"/>
+                                </Grid>                              
 
                             </StackPanel>
                             
@@ -97,9 +99,99 @@
                         <GroupBox x:Name="SquadScripsBox" Style="{StaticResource MaterialDesignGroupBox}" 
                                   materialDesign:ColorZoneAssist.Mode="PrimaryDark"                            
                                   Grid.Row="0"  Grid.Column="1" Header="Squad File Scripts" Margin="16,25,16,25">
+                            <StackPanel x:Name="SquadScriptsStack" >
+                             
+                                <Grid x:Name="S_Script3" Margin="0,5,0,15"  >
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"></ColumnDefinition>
+                                        <ColumnDefinition Width="*"></ColumnDefinition>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Grid.Column="0"
+                                               HorizontalAlignment="Left"
+                                               VerticalAlignment="Center"
+                                               Style="{StaticResource MaterialDesignBody2TextBlock}"
+                                               Text="Import Career Info" Foreground="#FF25012B" Margin="9,0,0,0"
+                                        
+                                    />
+                                    <Button x:Name="SqaudScript3Button"
+                                            Background="#FF7B1FA2" BorderBrush="#FF7B1FA2" VerticalAlignment="Center" HorizontalAlignment="Left" Height="38" Width="50" Click="ImportCareerInfoButton_Click"
+                                        ToolTip="Imports Career player stats and&#x0a;team player links to a squad file" Grid.Column="1" Margin="-15,0,0,0">
+                                        <materialDesign:PackIcon
+                                            Kind="Import" HorizontalAlignment="Center" VerticalAlignment="Center" Width="30" Height="30" Margin="0,1,0,1"/>
 
+                                    </Button>
+                      
+                                </Grid>
+                                <Grid x:Name="SquadMyTeamAllStats" Margin="0,5,0,15">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="2*"></ColumnDefinition>
+                                        <ColumnDefinition Width="*"></ColumnDefinition>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Grid.Column="0"
+                                               HorizontalAlignment="Left"
+                                               VerticalAlignment="Center"
+                                               Style="{StaticResource MaterialDesignBody2TextBlock}"
+                                               Text="User Team All Stats to 99" Foreground="#FF25012B" Margin="10,0,0,0"
+                                        
+                                    />
+                                    <Button x:Name="SquadScriptOverallButton" Grid.Column="1"                               
+                                        Style="{StaticResource MaterialDesignRaisedDarkButton}" 
+                                        materialDesign:ButtonAssist.CornerRadius="5"
+                                        ToolTip="Sets all your team players&#x0a; stats to 99"
+                                        Content="Apply" Margin="0,0,10,0" Click="SquadScriptOverallButton_Click" />
+                                </Grid>
+                                <!--<Grid x:Name="PotTo99" Margin="0,5,0,15">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="2*"></ColumnDefinition>
+                                        <ColumnDefinition Width="*"></ColumnDefinition>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Grid.Column="0"
+                                               HorizontalAlignment="Left"
+                                               VerticalAlignment="Center"
+                                               Style="{StaticResource MaterialDesignBody2TextBlock}"
+                                               Text="User Team Potenial to 99" Foreground="#FF25012B" Margin="10,0,0,0"
+                                        
+                                    />
+                                    <Button x:Name="SquadScriptPotentialButton" Grid.Column="1"                               
+                                        Style="{StaticResource MaterialDesignRaisedDarkButton}" 
+                                        materialDesign:ButtonAssist.CornerRadius="5"
+                                        ToolTip="Sets all your team players&#x0a; potential to 99"
+                                        Content="Apply" Margin="0,0,10,0" Click="CareerScript1Button_Click"/>
+                                </Grid>-->
+                                <Grid x:Name="AgeTo15" Margin="0,0,0,15">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="2*"></ColumnDefinition>
+                                        <ColumnDefinition Width="*"></ColumnDefinition>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Grid.Column="0"
+                                               HorizontalAlignment="Left"
+                                               VerticalAlignment="Center"
+                                               Style="{StaticResource MaterialDesignBody2TextBlock}"
+                                               Text="User Team Age to 15" Foreground="#FF25012B" Margin="10,0,0,0"
+                                        
+                                    />
+                                    <Button x:Name="SqauadScriptAgeButton" Grid.Column="1"                               
+                                        Style="{StaticResource MaterialDesignRaisedDarkButton}" 
+                                        materialDesign:ButtonAssist.CornerRadius="5"
+                                        Click="SquadScriptAgeButton_Click"    
+                                        ToolTip="Sets all your team players&#x0a;Age to 15"
+                                        Content="Apply" Margin="0,0,10,0"/>
+                                </Grid>
+
+
+                            </StackPanel>
 
                         </GroupBox>
+                        <materialDesign:Snackbar                            
+                            Grid.Row="1"                                                  
+                            Grid.ColumnSpan="2"
+                            MessageQueue="{materialDesign:MessageQueue}"
+                            x:Name="StatusSnackBar"
+                            HorizontalAlignment="Stretch" Background="#FF25012B" Foreground="#FFFFF5F5"                              
+                            ActionButtonStyle="{DynamicResource MaterialDesignFlatLightButton}"  
+                            ActionButtonPlacement="Inline">                                                    
+                        </materialDesign:Snackbar>
+                       
 
 
                     </Grid>

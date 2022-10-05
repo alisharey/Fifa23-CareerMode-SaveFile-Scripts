@@ -131,17 +131,19 @@ namespace FIFA23.Scripts
         {
            
             this.AllplayerInfo = GetAllPlayerInfo();
-            this.Teamplayerlinks = GetTeamPlayerLinks();
-            this.AllplayerInfo.Clear();
-            this.Teamplayerlinks.Clear();
+            this.Teamplayerlinks = GetTeamPlayerLinks();           
+
+           
             foreach (DataRow row in careerInfo.PlayersTable)
             {
+                AllplayerInfo.RemoveAt(0);
                 AllplayerInfo.Add(row.ItemArray);
             }
 
             foreach(DataRow row in careerInfo.TeamPlayerLinksTable)
             {
-                Teamplayerlinks.Add(row.ItemArray);
+                Teamplayerlinks.RemoveAt(0);
+                Teamplayerlinks.Add(row.ItemArray);             
             }
 
             //= careerInfo.PlayersTable;
@@ -149,7 +151,24 @@ namespace FIFA23.Scripts
 
 
         }
-
+        private int CheckInvalidStat(string stat)
+        {
+            int ret;
+            if (PlayerStats.Contains(stat))
+            {
+                ret = 1;
+            }
+            else if (stat == "birthdate")
+            {
+                ret = 2;
+            }
+            else
+            {
+                MessageBox.Show("Invalid Script/Stat Choice", "Invalid Choice", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                ret = -1;
+            }
+            return ret;
+        }
 
         #endregion
 
@@ -173,9 +192,9 @@ namespace FIFA23.Scripts
 
             return 0;
         }
-        public int UserTeamSingleStatScript(string stat)
+        public int UserTeamSingleStatScript(string stat) // RE DO?
         {
-
+            
             var ret = CheckInvalidStat(stat);
             if (ret == -1) return -1; //invalid stat 
 
@@ -208,42 +227,70 @@ namespace FIFA23.Scripts
             }
             return ret;
         }
-        public void TempScriptForAllStats()
+        public void ScriptSelector(bool IsUserTeam, List<string>? _myTeamPLayerIDs, bool IsSingleStat,string selectedStat = "")
         {
-            foreach (DataRow _player in AllplayerInfo)
+            var value = 99;
+            if(IsSingleStat && selectedStat == "birthdate")
             {
+                value = 155185;
+            }
+            
+            if(IsSingleStat && IsUserTeam) // user team single stat
+            {               
 
-
-                foreach (string stat in PlayerStats)
+                this.MyTeamPlayerIDs = _myTeamPLayerIDs;
+                foreach (DataRow _player in AllplayerInfo)
                 {
+                   
+                    string? playerID = _player["playerid"].ToString();
+                    if (MyTeamPlayerIDs.Contains(playerID))
+                    {
 
-                    _player[stat] = 99;
-
+                        _player[selectedStat] = value;
+                    }
                 }
 
+                   
             }
+            else if (!IsSingleStat && IsUserTeam)// user Team all stats
+            {
+                this.MyTeamPlayerIDs = _myTeamPLayerIDs;
+                foreach (DataRow _player in AllplayerInfo)
+                {
+                    string? playerID = _player["playerid"].ToString();
+                    if (MyTeamPlayerIDs.Contains(playerID))
+                    {
 
+                        foreach (string stat in PlayerStats)
+                        {
+                            _player[stat] = value;
+                        }
+                    }
+                }
+            }
+            else if(IsSingleStat && !IsUserTeam) // all teams single stat
+            {
+                foreach (DataRow _player in AllplayerInfo)
+                {
+                    _player[selectedStat] = value;
+                }
+            }           
+            else if(!IsUserTeam && !IsSingleStat) //all teams  all stats
+            {
+                foreach(DataRow _player in AllplayerInfo)
+                {
+                    foreach(string stat in PlayerStats)
+                    {
+                        _player[stat] = value;
+                    }
+                }
+            }
         }
+
+        
 
         #endregion
 
-        private int CheckInvalidStat(string stat)
-        {
-            int ret;
-            if (PlayerStats.Contains(stat))
-            {
-                ret = 1;
-            }
-            else if (stat == "birthdate")
-            {
-                ret = 2;
-            }
-            else
-            {
-                MessageBox.Show("Invalid Script/Stat Choice", "Invalid Choice", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                ret = -1;
-            }
-            return ret;
-        }
+       
     }
 }

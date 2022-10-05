@@ -16,12 +16,12 @@ namespace FIFA23.Scripts
         public DataSet[] m_DataSetEa;
 
         public FileType Type { get; set; }
-
-
-        public FileHandling()
+        
+        
+        public FileHandling(FileType fileType)
 
         {
-
+            this.Type = fileType;
             this.m_FifaDbFileName = Path.Combine(Environment.CurrentDirectory, @"Data\", "fifa_ng_db.db");
             this.m_FifaDbXmlFileName = Path.Combine(Environment.CurrentDirectory, @"Data\", "fifa_ng_db-meta.xml");
 
@@ -29,41 +29,10 @@ namespace FIFA23.Scripts
         }
 
         
-        public int Load()
+        public int Load(string InternalFile)
         {
             int ret = 0;
-            this.m_InternalFile = string.Empty;            
-            //Open File Dialog to select file
-            string userPath = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
-            OpenFileDialog openDialog = new OpenFileDialog();
-            openDialog.InitialDirectory = Path.Combine(userPath, @"OneDrive\Documents\FIFA 23\settings");
-            if (DialogResult.OK == openDialog.ShowDialog())
-            {
-                this.m_InternalFile = openDialog.FileName;
-            }
-            if (string.IsNullOrEmpty(this.m_InternalFile)) return -1; //if no file is selected
-
-
-            //check the file type 
-            var fileName =  Path.GetFileName(this.m_InternalFile);            
-            if (fileName.StartsWith("Squad"))
-
-            {
-                this.Type = FileType.Squad;
-            }
-            else if (fileName.StartsWith("Career"))
-            {
-                this.Type = FileType.Career;
-            }
-            else 
-            {
-                
-                MessageBox.Show("Select a file which starts with Squads or Career and try again");
-                ret = this.Load();
-                if(ret != 0) return ret;
-               
-            }
-            
+            this.m_InternalFile = InternalFile;     
             LoadEA();
             return ret;
         }
@@ -85,8 +54,8 @@ namespace FIFA23.Scripts
              
             this.m_CareerFile = new CareerFile(m_InternalFile, this.m_FifaDbXmlFileName);
             m_DataSetEa = this.m_CareerFile.ConvertToDataSet();
-          
 
+         
 
         }
 
