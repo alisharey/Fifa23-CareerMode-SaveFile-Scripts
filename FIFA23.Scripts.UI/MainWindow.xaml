@@ -7,7 +7,7 @@
         mc:Ignorable="d"
         xmlns:dragablz="clr-namespace:Dragablz;assembly=Dragablz"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-        Height="584" Width="709" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" WindowStyle="None" Icon="/Icon.png">
+        Height="584" Width="719" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" WindowStyle="None" Icon="/Icon.png">
     <Grid x:Name="WindowGrid">
 
         <Grid x:Name="MenuGrid" Height="60" VerticalAlignment="Top" Background="#FF25012B">
@@ -34,15 +34,15 @@
             </Button>
         </Grid>
         <Grid x:Name="TabsGrid" Margin="0 60 0 0">
-            <dragablz:TabablzControl x:Name="MainTab" BorderBrush="#FF25012B" SelectionChanged="TabablzControl_SelectionChanged">
-                <dragablz:TabablzControl.InterTabController>
+            <TabControl x:Name="MainTab" BorderBrush="#FF25012B" SelectionChanged="TabablzControl_SelectionChanged">
+                <!--<dragablz:TabablzControl.InterTabController>
                     <dragablz:InterTabController/>
-                </dragablz:TabablzControl.InterTabController>
-                <TabItem x:Name="HomeTab" Header="HOME">
+                </dragablz:TabablzControl.InterTabController>-->
+                <TabItem x:Name="HomeTab" Header="HOME" Visibility="Visible">
                     <Grid x:Name="HomeGrid" >
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*"></ColumnDefinition>
-                            <ColumnDefinition Width="*"></ColumnDefinition>                           
+                            <ColumnDefinition Width="*"></ColumnDefinition>
                         </Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="5*"></RowDefinition>
@@ -51,7 +51,7 @@
 
                         <GroupBox x:Name="CareerScriptsBox" Style="{StaticResource MaterialDesignGroupBox}" 
                                   materialDesign:ColorZoneAssist.Mode="PrimaryDark"
-                                  Grid.Row="0" Grid.Column="0" Header="Career File Scripts" Margin="16,25,16,25">
+                                  Grid.Row="0" Grid.Column="0" Header="Career File Scripts" Margin="30,25,16,25">
                             <StackPanel x:Name="CareerScriptsStack" >
 
                                 <Grid x:Name="Script1" Margin="0,5,0,15">
@@ -69,7 +69,7 @@
                                     <Button x:Name="CareerScript1Button" Grid.Column="1"                               
                                         Style="{StaticResource MaterialDesignRaisedDarkButton}" 
                                         materialDesign:ButtonAssist.CornerRadius="5"
-                                        ToolTip="Sets all your team players&#x0a; potential to 99"
+                                        ToolTip="Sets all your team players&#x0a;potential to 99"
                                         Content="Apply" Margin="0,0,10,0" Click="CareerScript1Button_Click"/>
                                 </Grid>
                                 <Grid x:Name="Script2" Margin="0,0,0,15">
@@ -88,19 +88,19 @@
                                         Style="{StaticResource MaterialDesignRaisedDarkButton}" 
                                         materialDesign:ButtonAssist.CornerRadius="5"
                                             
-                                        ToolTip="Sets all your team players&#x0a;Age to 15"
+                                        ToolTip="Sets all your team players&#x0a;age to 15"
                                         Content="Apply" Margin="0,0,10,0" Click="CareerScript2Button_Click"/>
-                                </Grid>                              
+                                </Grid>
 
                             </StackPanel>
-                            
+
 
                         </GroupBox>
                         <GroupBox x:Name="SquadScripsBox" Style="{StaticResource MaterialDesignGroupBox}" 
                                   materialDesign:ColorZoneAssist.Mode="PrimaryDark"                            
-                                  Grid.Row="0"  Grid.Column="1" Header="Squad File Scripts" Margin="16,25,16,25">
+                                  Grid.Row="0"  Grid.Column="1" Header="Squad File Scripts" Margin="16,25,30,25">
                             <StackPanel x:Name="SquadScriptsStack" >
-                             
+
                                 <Grid x:Name="S_Script3" Margin="0,5,0,15"  >
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="*"></ColumnDefinition>
@@ -115,12 +115,35 @@
                                     />
                                     <Button x:Name="SqaudScript3Button"
                                             Background="#FF7B1FA2" BorderBrush="#FF7B1FA2" VerticalAlignment="Center" HorizontalAlignment="Left" Height="38" Width="50" Click="ImportCareerInfoButton_Click"
-                                        ToolTip="Imports Career player stats and&#x0a;team player links to a squad file" Grid.Column="1" Margin="-15,0,0,0">
+                                        ToolTip="Imports Career player stats and&#x0a;team player links to a squad file" Grid.Column="1">
                                         <materialDesign:PackIcon
                                             Kind="Import" HorizontalAlignment="Center" VerticalAlignment="Center" Width="30" Height="30" Margin="0,1,0,1"/>
 
                                     </Button>
-                      
+
+                                </Grid>
+                                <Grid x:Name="Selection" Margin="0,0,0,20">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="2*"></ColumnDefinition>
+                                        <ColumnDefinition Width="*"></ColumnDefinition>
+                                    </Grid.ColumnDefinitions>
+
+                                    <ComboBox x:Name="playerComboBox" Grid.Column="0"
+                                      Style="{StaticResource MaterialDesignFloatingHintComboBox}"
+                                      materialDesign:TextFieldAssist.HasClearButton="True"
+                                      materialDesign:TextFieldAssist.SuffixText=""
+                                      materialDesign:TextFieldAssist.UnderlineBrush="{DynamicResource PrimaryHueDarkBrush}"
+                                      materialDesign:ColorZoneAssist.Mode="PrimaryDark"
+                                      materialDesign:HintAssist.Hint="Player"
+                                      materialDesign:HintAssist.HelperText="Select one Player"
+                                      MinWidth="128" Margin="10,0,0,0" BorderBrush="#FF7B1FA2" Foreground="#FF25012B"
+                                      ItemsSource="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor},
+                                        Path=MyTeamPlayers}"
+                                     SelectedValuePath="Key"
+                                     DisplayMemberPath="Value">
+
+                                    </ComboBox>
+
                                 </Grid>
                                 <Grid x:Name="SquadMyTeamAllStats" Margin="0,5,0,15">
                                     <Grid.ColumnDefinitions>
@@ -137,27 +160,9 @@
                                     <Button x:Name="SquadScriptOverallButton" Grid.Column="1"                               
                                         Style="{StaticResource MaterialDesignRaisedDarkButton}" 
                                         materialDesign:ButtonAssist.CornerRadius="5"
-                                        ToolTip="Sets all your team players&#x0a; stats to 99"
+                                        ToolTip="Sets all your team players&#x0a;stats to 99"
                                         Content="Apply" Margin="0,0,10,0" Click="SquadScriptOverallButton_Click" />
                                 </Grid>
-                                <!--<Grid x:Name="PotTo99" Margin="0,5,0,15">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="2*"></ColumnDefinition>
-                                        <ColumnDefinition Width="*"></ColumnDefinition>
-                                    </Grid.ColumnDefinitions>
-                                    <TextBlock Grid.Column="0"
-                                               HorizontalAlignment="Left"
-                                               VerticalAlignment="Center"
-                                               Style="{StaticResource MaterialDesignBody2TextBlock}"
-                                               Text="User Team Potenial to 99" Foreground="#FF25012B" Margin="10,0,0,0"
-                                        
-                                    />
-                                    <Button x:Name="SquadScriptPotentialButton" Grid.Column="1"                               
-                                        Style="{StaticResource MaterialDesignRaisedDarkButton}" 
-                                        materialDesign:ButtonAssist.CornerRadius="5"
-                                        ToolTip="Sets all your team players&#x0a; potential to 99"
-                                        Content="Apply" Margin="0,0,10,0" Click="CareerScript1Button_Click"/>
-                                </Grid>-->
                                 <Grid x:Name="AgeTo15" Margin="0,0,0,15">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="2*"></ColumnDefinition>
@@ -173,10 +178,11 @@
                                     <Button x:Name="SqauadScriptAgeButton" Grid.Column="1"                               
                                         Style="{StaticResource MaterialDesignRaisedDarkButton}" 
                                         materialDesign:ButtonAssist.CornerRadius="5"
-                                        Click="SquadScriptAgeButton_Click"    
-                                        ToolTip="Sets all your team players&#x0a;Age to 15"
+                                        Click="SquadSingleStatButton_Click"    
+                                        ToolTip="Sets all your team players&#x0a;age to 15"
                                         Content="Apply" Margin="0,0,10,0"/>
                                 </Grid>
+                                
 
 
                             </StackPanel>
@@ -189,20 +195,20 @@
                             x:Name="StatusSnackBar"
                             HorizontalAlignment="Stretch" Background="#FF25012B" Foreground="#FFFFF5F5"                              
                             ActionButtonStyle="{DynamicResource MaterialDesignFlatLightButton}"  
-                            ActionButtonPlacement="Inline">                                                    
+                            ActionButtonPlacement="Inline">
                         </materialDesign:Snackbar>
-                       
+
 
 
                     </Grid>
-                </TabItem>              
+                </TabItem>
                 <TabItem x:Name="GitHubTab">
                     <TabItem.Header>
                         <materialDesign:PackIcon Kind="Github" Foreground="{DynamicResource PrimaryHueLightBrush}"/>
                     </TabItem.Header>
                     <TextBlock Text="https://github.com/alisharey/Fifa23-CareerMode-SaveFile-Scripts" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                 </TabItem>
-            </dragablz:TabablzControl>
+            </TabControl>
         </Grid>
     </Grid>
 </Window>

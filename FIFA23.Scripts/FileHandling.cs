@@ -1,7 +1,11 @@
 ﻿using FifaLibrary;
 using System.Data;
 using System.IO;
-
+using ClosedXML;
+using System.Windows.Controls;
+using Microsoft;
+using DocumentFormat.OpenXml.Spreadsheet;
+using ClosedXML.Excel;
 
 namespace FIFA23.Scripts
 {
@@ -14,6 +18,7 @@ namespace FIFA23.Scripts
         DataSet m_DataSet;
         CareerFile m_CareerFile;
 
+        public DataTable m_PlayerNames;
         public DataSet[] m_DataSetEa;
         public FileType Type { get; set; }
         
@@ -46,9 +51,15 @@ namespace FIFA23.Scripts
 
             m_FifaDb = new DbFile(this.m_FifaDbFileName, this.m_FifaDbXmlFileName);
             this.m_DataSet = this.m_FifaDb.ConvertToDataSet();
+            this.m_PlayerNames = this.m_DataSet.Tables["playernames"];
+            //var wb = new XLWorkbook();
+            //wb.Worksheets.Add(this.m_DataSet);
+            //wb.SaveAs("Sqaud.xlsx");
+            
+
 
         }
-
+        
         private void LoadEA()
         {
              
