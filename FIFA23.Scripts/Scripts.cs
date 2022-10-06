@@ -16,6 +16,7 @@ namespace FIFA23.Scripts
         private int season;
         private FileType m_FileType;
         private List<string> MyTeamPlayerIDs;
+        private FileHandling File;
         private static List<string> PlayerStats = new List<string>
             {
                    "overallrating",
@@ -70,21 +71,26 @@ namespace FIFA23.Scripts
                      "gkpositioning",
                      "gkreflexes",
         };
-        public Scripts(FileHandling File)
+        private Dictionary<string, string> MyTeamPlayersIDtoName;
+
+        public Scripts(FileHandling _file)
         {
-            this.dataSetCollection = File.m_DataSetEa;
-            this.m_FileType = File.Type;
+            this.File = _file;
+            this.dataSetCollection = _file.m_DataSetEa;
+            this.m_FileType = _file.Type;
+           
             if (m_FileType == FileType.Career)
             {
                 IndexOffset = 1;
                 this.myteamid = GetMyTeamID();
                 this.MyTeamPlayerIDs = GetMyTeamPlayerIDs(myteamid);
+             
             }
-            else IndexOffset = 0;          
-          
+            else IndexOffset = 0;
             this.AllplayerInfo = GetAllPlayerInfo();
             this.Teamplayerlinks = GetTeamPlayerLinks();
-          
+
+            if (m_FileType == FileType.Career) this.MyTeamPlayersIDtoName = GetMyTeamPLayerNames();
 
         }
 
@@ -108,13 +114,45 @@ namespace FIFA23.Scripts
             {
                 if (_player["teamid"].ToString() == myTeamID)
                 {
-                    string playerID = _player["playerid"].ToString();
+                    string playerID = _player["playerid"].ToString();                   
                     tempPlayerList.Add(playerID);
                     Console.WriteLine($"{playerID} is in Team {myTeamID}");
                 }
             }
             return tempPlayerList;
         }
+        private Dictionary<string, string> GetMyTeamPLayerNames()
+        {
+            Dictionary<string, string> temp = new Dictionary<string, string>();
+
+            foreach (DataRow _player in AllplayerInfo)
+            {
+                string? playerID = _player["playerid"].ToString();
+                if (MyTeamPlayerIDs.Contains(playerID))
+                {
+                    
+                    var tempNameID = _player["commonnameid"].ToString();                   
+                    if(tempNameID == "0")
+                    {
+                        tempNameID = _player["lastnameid"].ToString();
+                    }
+
+                    foreach (DataRow name in File.m_PlayerNames.Rows)
+                    {
+                        var nameid = name["nameid"].ToString();
+                        if(nameid == tempNameID)
+                        {
+                            temp.Add(playerID, name["name"].ToString());
+                        }
+
+                    }
+                }
+
+
+            }
+
+            return temp;
+        }        
         private DataRowCollection GetAllPlayerInfo()
         {
             return dataSetCollection[IndexOffset].Tables["players"].Rows;
@@ -135,7 +173,8 @@ namespace FIFA23.Scripts
         public CareerInfo ExportCareerInfo()
         {
 
-            var careerInfo = new CareerInfo(myteamid, AllplayerInfo, Teamplayerlinks, MyTeamPlayerIDs);
+            var careerInfo = new CareerInfo(myteamid, AllplayerInfo, Teamplayerlinks, MyTeamPlayerIDs,
+                MyTeamPlayersIDtoName);
 
             return careerInfo;
         }
@@ -144,6 +183,7 @@ namespace FIFA23.Scripts
 
             this.myteamid        = careerInfo.MyTeamID;
             this.MyTeamPlayerIDs = careerInfo.MyTeamPlayerIDs;
+            this.MyTeamPlayersIDtoName = careerInfo.MyTeamPlayerNamesDict;
             ImportData(careerInfo);
 
          

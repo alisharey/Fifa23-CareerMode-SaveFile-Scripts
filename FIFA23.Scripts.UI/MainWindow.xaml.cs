@@ -6,13 +6,13 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Threading;
 using Microsoft.Win32;
+using System.Collections.Generic;
 
 using FIFA23.Scripts;
 using Path = System.IO.Path;
 using MessageBox = System.Windows.MessageBox;
 using Application = System.Windows.Application;
-
-
+using System.ComponentModel;
 
 namespace FIFA23.Scripts.UI;
 
@@ -21,20 +21,29 @@ namespace FIFA23.Scripts.UI;
 /// </summary>
 public partial class MainWindow : Window
 {
+    const string CareerFileError = "Error: Load Career File First";
+   
     private FileHandling _fileHandling;
     private FIFA23.Scripts.Scripts _scripts;
     private CareerInfo careerInfo;
     private bool IsFileLoaded;
-    private bool IsLinkLoaded;
-    const string CareerFileError = "Error: Load Career File First";
+    private bool IsLinkLoaded;   
     private FileType _fileType;
     private string _fileName;
+
+    private Dictionary<string, string> MyTeamPlayers { get; set; }
+
 
     public MainWindow()
     {
         InitializeComponent();
         IsFileLoaded = false;
         IsLinkLoaded = false;
+        MyTeamPlayers = new Dictionary<string, string>();
+        //this.DataContext = new ComboBoxViewModel();
+
+
+
     }
 
     protected override void OnMouseLeftButtonDown(MouseButtonEventArgs e)
@@ -96,22 +105,25 @@ public partial class MainWindow : Window
         if (!OpenFile(title)) return;
 
 
-        if (CheckAccess()) PopUpMessage("Loading..");
+        PopUpMessage("Loading..");
         await Task.Run(() =>
         {
             _fileHandling = new FileHandling(this._fileType);
             _fileHandling.Load(_fileName);
-            _scripts = new Scripts(_fileHandling);
+            _fileHandling.LoadDb();
+            _scripts = new Scripts(_fileHandling);           
             this.IsFileLoaded = true;
+          
         });
 
 
-        if (IsFileLoaded && CheckAccess()) PopUpMessage("Loading Complete");
+        if (IsFileLoaded) PopUpMessage("Loading Complete");
     }
 
     private async void LoadButton_Click(object sender, RoutedEventArgs e)
     {
         await LoadFile();
+        if (_fileType == FileType.Career) SaveCareerInfo();
 
     }
     private async void SaveButton_Click(object sender, RoutedEventArgs e)
@@ -152,30 +164,41 @@ public partial class MainWindow : Window
     }
     private void ImportCareerInfo()
     {
-        if (careerInfo == null) return;
-        if (IsFileLoaded && _fileType == FileType.Squad)
+        string message;
+        if (IsFileLoaded && _fileType == FileType.Squad && careerInfo != null)
         {
 
             _scripts.ImportCareerInfo(careerInfo);
-            PopUpMessage($"Imported careerinfo with Team ID {careerInfo.MyTeamID}");
+            message = $"Imported career info with Team ID {careerInfo.MyTeamID}";
 
 
         }
         else
         {
-            PopUpMessage("Load Squad File First.");
+            message = "Error: Try again by Loading a career file then a squad file in order.";
 
         }
+
+        PopUpMessage(message);
     }
     private void SaveCareerInfo()
     {
 
         if (IsFileLoaded && _fileHandling.Type == FileType.Career)
         {
-            careerInfo = _scripts.ExportCareerInfo();
-            PopUpMessage("Career info saved, load a squad file to import the info.");
+            careerInfo = _scripts.ExportCareerInfo();           
+            
+            playerComboBox.ItemsSource = careerInfo.MyTeamPlayerNamesDict;
+            playerComboBox.SelectedValuePath = "Key";
+            playerComboBox.DisplayMemberPath = "Value";
+           
+            //PopUpMessage("Career info saved, load a squad file to import the info.");
         }
-        else PopUpMessage(CareerFileError);
+        else
+        {
+            return;
+            //PopUpMessage(CareerFileError);
+        }
 
     }
 
@@ -236,14 +259,25 @@ public partial class MainWindow : Window
             }
         }
     }
-    private void SquadScriptAgeButton_Click(object sender, RoutedEventArgs e)
+    private void SquadSingleStatButton_Click(object sender, RoutedEventArgs e)
     {
+        var stat = string.Empty;
+        var _buttonName = ( sender as Button ).Name;
+
+        if (_buttonName == "SqauadScriptAgeButton") stat = "birthdate";
+        else return;
+
         if (IsFileLoaded && _fileType == FileType.Squad)
         {
+           
             if (careerInfo != null)
             {
-                _scripts.ScriptSelector(true, careerInfo.MyTeamPlayerIDs, true, "birthdate");
-                PopUpMessage("Script User Team Age to 15 Done.");
+                _scripts.ScriptSelector(true,
+                    careerInfo.MyTeamPlayerIDs,
+                    true, 
+                    stat);
+
+                PopUpMessage("Script Done.");
             }
             else
             {
@@ -254,18 +288,18 @@ public partial class MainWindow : Window
 
 
 
-    private void PopUpMessage(string s, string ActionContent = "OK")
+    private void PopUpMessage(string message, string ActionContent = "OK")
     {
         if(!CheckAccess())
         {
-            Dispatcher.BeginInvoke(() => PopUpMessage(s));
+            Dispatcher.BeginInvoke(() => PopUpMessage(message, ActionContent));
         }
         else
         {
-            StatusSnackBar.MessageQueue.Enqueue(s,
+            StatusSnackBar.MessageQueue.Enqueue(message,
                ActionContent,
                param => Trace.WriteLine("Actioned: " + param),
-               s);
+               message);
         }
       
 
