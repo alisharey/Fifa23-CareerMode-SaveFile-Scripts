@@ -22,12 +22,12 @@ namespace FIFA23.Scripts.UI;
 public partial class MainWindow : Window
 {
     const string CareerFileError = "Error: Load Career File First";
-   
+
     private FileHandling _fileHandling;
     private FIFA23.Scripts.Scripts _scripts;
     private CareerInfo careerInfo;
     private bool IsFileLoaded;
-    private bool IsLinkLoaded;   
+    private bool IsLinkLoaded;
     private FileType _fileType;
     private string _fileName;
 
@@ -40,9 +40,12 @@ public partial class MainWindow : Window
         IsFileLoaded = false;
         IsLinkLoaded = false;
         MyTeamPlayers = new Dictionary<string, string>();
-        //this.DataContext = new ComboBoxViewModel();
 
-
+        //foreach(string s in Scripts.PlayerStats)
+        //{
+        //    StatsComboBox.Items.Add(s);
+        //}
+        this.StatsComboBox.ItemsSource = Scripts.PlayerStats;
 
     }
 
@@ -111,9 +114,9 @@ public partial class MainWindow : Window
             _fileHandling = new FileHandling(this._fileType);
             _fileHandling.Load(_fileName);
             _fileHandling.LoadDb();
-            _scripts = new Scripts(_fileHandling);           
+            _scripts = new Scripts(_fileHandling);
             this.IsFileLoaded = true;
-          
+
         });
 
 
@@ -154,15 +157,32 @@ public partial class MainWindow : Window
         PopUpMessage(message);
 
 
-    }   
+    }
+    private async void ExportButton_Click(object sender, RoutedEventArgs e)
+    {
+        var filename = "";
+        if (IsFileLoaded)
+        {
+
+            await Task.Run(() => { filename = _fileHandling.ExportToXL(); });
+
+        }
+        else
+        {
+            PopUpMessage("Load a file first.");
+            return;
+        }
+
+        PopUpMessage($"File: {filename}.xlsx is saved in your current app directory as the first database.");
+    }
     private async void ImportCareerInfoButton_Click(object sender, RoutedEventArgs e)
     {
         await LoadFile("Open a Career Mode file to get the data from");
         SaveCareerInfo();
         await LoadFile("Open the targeted squad file");
-        ImportCareerInfo();  
+        ImportCareerInfoTask();
     }
-    private void ImportCareerInfo()
+    private void ImportCareerInfoTask()
     {
         string message;
         if (IsFileLoaded && _fileType == FileType.Squad && careerInfo != null)
@@ -186,12 +206,12 @@ public partial class MainWindow : Window
 
         if (IsFileLoaded && _fileHandling.Type == FileType.Career)
         {
-            careerInfo = _scripts.ExportCareerInfo();           
-            
+            careerInfo = _scripts.ExportCareerInfo();
+
             playerComboBox.ItemsSource = careerInfo.MyTeamPlayerNamesDict;
             playerComboBox.SelectedValuePath = "Key";
             playerComboBox.DisplayMemberPath = "Value";
-           
+
             //PopUpMessage("Career info saved, load a squad file to import the info.");
         }
         else
@@ -248,7 +268,7 @@ public partial class MainWindow : Window
     {
         if (IsFileLoaded && _fileType == FileType.Squad)
         {
-            if(careerInfo != null)
+            if (careerInfo != null)
             {
                 _scripts.ScriptSelector(true, careerInfo.MyTeamPlayerIDs, false);
                 PopUpMessage("Script Done.");
@@ -262,19 +282,19 @@ public partial class MainWindow : Window
     private void SquadSingleStatButton_Click(object sender, RoutedEventArgs e)
     {
         var stat = string.Empty;
-        var _buttonName = ( sender as Button ).Name;
+        var _buttonName = (sender as Button).Name;
 
         if (_buttonName == "SqauadScriptAgeButton") stat = "birthdate";
         else return;
 
         if (IsFileLoaded && _fileType == FileType.Squad)
         {
-           
+
             if (careerInfo != null)
             {
                 _scripts.ScriptSelector(true,
                     careerInfo.MyTeamPlayerIDs,
-                    true, 
+                    true,
                     stat);
 
                 PopUpMessage("Script Done.");
@@ -290,7 +310,7 @@ public partial class MainWindow : Window
 
     private void PopUpMessage(string message, string ActionContent = "OK")
     {
-        if(!CheckAccess())
+        if (!CheckAccess())
         {
             Dispatcher.BeginInvoke(() => PopUpMessage(message, ActionContent));
         }
@@ -301,7 +321,7 @@ public partial class MainWindow : Window
                param => Trace.WriteLine("Actioned: " + param),
                message);
         }
-      
+
 
     }
 
@@ -314,10 +334,10 @@ public partial class MainWindow : Window
 
         if (MainTab.SelectedItem == GitHubTab)
         {
-            MainTab.SelectedItem = HomeTab;
+            MainTab.SelectedItem = SquadTab;
             foreach (TabItem tab in MainTab.Items)
             {
-                if (tab == HomeTab) tab.IsSelected = true;
+                if (tab == SquadTab) tab.IsSelected = true;
                 else tab.IsSelected = false;
 
             }
@@ -347,5 +367,52 @@ public partial class MainWindow : Window
         Application.Current.Shutdown();
     }
 
+    private void playerComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        var combo = sender as ComboBox;
+        if (combo.SelectedValue == null) return;
+        //PopUpMessage($"{combo.SelectedItem}, {combo.SelectedValue}");  
+    }
 
+    private void NumericOnly(System.Object sender, System.Windows.Input.TextCompositionEventArgs e)
+    {
+        e.Handled = IsTextNumeric(e.Text);
+
+    }
+
+
+    private static bool IsTextNumeric(string str)
+    {
+        System.Text.RegularExpressions.Regex reg = new System.Text.RegularExpressions.Regex("[^0-9]");
+        return reg.IsMatch(str);
+
+    }
+
+    private void ValueTextBox_KeyDown(object sender, KeyEventArgs e)
+    {
+        var value = ValueTextBox.Text;
+        if (e.Key == Key.Enter && !string.IsNullOrEmpty(value) && StatsComboBox.SelectedValue != null
+            && playerComboBox.SelectedValue != null)
+        {
+
+            var intValue = int.Parse(value);
+            var stat = (string)StatsComboBox.SelectedValue;
+            var playerID = (string)playerComboBox.SelectedValue;
+
+
+            if (intValue >= 1 && intValue <= 99)
+            {
+                _scripts.SetPlayerStat(playerID, stat, intValue);
+                PopUpMessage($"{playerID} {stat} is set to {intValue}");
+            }
+
+            else
+            {
+                PopUpMessage($"{stat} value is Invalid");
+            }
+
+
+
+        }
+    }
 }

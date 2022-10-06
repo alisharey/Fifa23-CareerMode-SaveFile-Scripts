@@ -9,15 +9,15 @@ namespace FIFA23.Scripts
     {
         private int IndexOffset;
         private DataSet[] dataSetCollection { get; set; }
-        private DataRowCollection AllplayerInfo;
+        private DataRowCollection PlayersTable;
         private DataRowCollection Teamplayerlinks;
 
         private string myteamid;
         private int season;
-        private FileType m_FileType;
+        private FileType fileType;
         private List<string> MyTeamPlayerIDs;
         private FileHandling File;
-        private static List<string> PlayerStats = new List<string>
+        public static List<string> PlayerStats { get; private set; } = new List<string>
             {
                    "overallrating",
                    "potential",
@@ -77,9 +77,9 @@ namespace FIFA23.Scripts
         {
             this.File = _file;
             this.dataSetCollection = _file.m_DataSetEa;
-            this.m_FileType = _file.Type;
+            this.fileType = _file.Type;
            
-            if (m_FileType == FileType.Career)
+            if (fileType == FileType.Career)
             {
                 IndexOffset = 1;
                 this.myteamid = GetMyTeamID();
@@ -87,10 +87,10 @@ namespace FIFA23.Scripts
              
             }
             else IndexOffset = 0;
-            this.AllplayerInfo = GetAllPlayerInfo();
+            this.PlayersTable = GetPlayersTable();
             this.Teamplayerlinks = GetTeamPlayerLinks();
 
-            if (m_FileType == FileType.Career) this.MyTeamPlayersIDtoName = GetMyTeamPLayerNames();
+            if (fileType == FileType.Career) this.MyTeamPlayersIDtoName = GetMyTeamPLayerNames();
 
         }
 
@@ -98,7 +98,7 @@ namespace FIFA23.Scripts
         #region  Getters
         private string GetMyTeamID()
         {
-            if (this.m_FileType != FileType.Career) return null;
+            if (this.fileType != FileType.Career) return null;
             return dataSetCollection[0].Tables["career_users"].Rows[0]["clubteamid"].ToString();
         }
         private string GetSeasonCount()
@@ -107,7 +107,7 @@ namespace FIFA23.Scripts
         }
         private List<string> GetMyTeamPlayerIDs(string myTeamID)
         {
-            if (this.m_FileType != FileType.Career) return null;
+            if (this.fileType != FileType.Career) return null;
             var tempPlayerList = new List<string>();
             DataRowCollection _playersContractInfo = dataSetCollection[0].Tables["career_playercontract"].Rows;
             foreach (DataRow _player in _playersContractInfo)
@@ -125,7 +125,7 @@ namespace FIFA23.Scripts
         {
             Dictionary<string, string> temp = new Dictionary<string, string>();
 
-            foreach (DataRow _player in AllplayerInfo)
+            foreach (DataRow _player in PlayersTable)
             {
                 string? playerID = _player["playerid"].ToString();
                 if (MyTeamPlayerIDs.Contains(playerID))
@@ -153,7 +153,7 @@ namespace FIFA23.Scripts
 
             return temp;
         }        
-        private DataRowCollection GetAllPlayerInfo()
+        private DataRowCollection GetPlayersTable()
         {
             return dataSetCollection[IndexOffset].Tables["players"].Rows;
 
@@ -173,7 +173,7 @@ namespace FIFA23.Scripts
         public CareerInfo ExportCareerInfo()
         {
 
-            var careerInfo = new CareerInfo(myteamid, AllplayerInfo, Teamplayerlinks, MyTeamPlayerIDs,
+            var careerInfo = new CareerInfo(myteamid, PlayersTable, Teamplayerlinks, MyTeamPlayerIDs,
                 MyTeamPlayersIDtoName);
 
             return careerInfo;
@@ -193,14 +193,14 @@ namespace FIFA23.Scripts
         private void ImportData(CareerInfo careerInfo)
         {
 
-            this.AllplayerInfo = GetAllPlayerInfo();
+            this.PlayersTable = GetPlayersTable();
             this.Teamplayerlinks = GetTeamPlayerLinks();
 
 
             foreach (DataRow row in careerInfo.PlayersTable)
             {
-                AllplayerInfo.RemoveAt(0);
-                AllplayerInfo.Add(row.ItemArray);
+                PlayersTable.RemoveAt(0);
+                PlayersTable.Add(row.ItemArray);
             }
 
             foreach (DataRow row in careerInfo.TeamPlayerLinksTable)
@@ -239,7 +239,7 @@ namespace FIFA23.Scripts
             var ret = CheckInvalidStat(stat);
             if (ret == -1) return -1; //invalid stat 
 
-            foreach (DataRow _player in AllplayerInfo)
+            foreach (DataRow _player in PlayersTable)
             {
                 string? playerID = _player["playerid"].ToString();
                 if (MyTeamPlayerIDs.Contains(playerID))
@@ -282,7 +282,7 @@ namespace FIFA23.Scripts
             {               
 
                 this.MyTeamPlayerIDs = _myTeamPLayerIDs;
-                foreach (DataRow _player in AllplayerInfo)
+                foreach (DataRow _player in PlayersTable)
                 {
                    
                     string? playerID = _player["playerid"].ToString();
@@ -298,7 +298,7 @@ namespace FIFA23.Scripts
             else if (!IsSingleStat && IsUserTeam)// user Team all stats
             {
                 this.MyTeamPlayerIDs = _myTeamPLayerIDs;
-                foreach (DataRow _player in AllplayerInfo)
+                foreach (DataRow _player in PlayersTable)
                 {
                     string? playerID = _player["playerid"].ToString();
                     if (MyTeamPlayerIDs.Contains(playerID))
@@ -313,14 +313,14 @@ namespace FIFA23.Scripts
             }
             else if(IsSingleStat && !IsUserTeam) // all teams single stat
             {
-                foreach (DataRow _player in AllplayerInfo)
+                foreach (DataRow _player in PlayersTable)
                 {
                     _player[selectedStat] = value;
                 }
             }           
             else if(!IsUserTeam && !IsSingleStat) //all teams  all stats
             {
-                foreach(DataRow _player in AllplayerInfo)
+                foreach(DataRow _player in PlayersTable)
                 {
                     foreach(string stat in PlayerStats)
                     {
@@ -330,9 +330,24 @@ namespace FIFA23.Scripts
             }
         }
 
-        
+        public void SetPlayerStat(string playerID, string stat, int value = 99)
+        {
+            if (stat == "birthdate") value = 155185;            
+            foreach (DataRow _player in PlayersTable)
+            {
+
+                string? _playerID = _player["playerid"].ToString();
+                if (_playerID == playerID)
+                {
+
+                    _player[stat] = value;
+                }
+            }
+
+        }
 
 
-       
+
+
     }
 }

@@ -6,6 +6,7 @@ using System.Windows.Controls;
 using Microsoft;
 using DocumentFormat.OpenXml.Spreadsheet;
 using ClosedXML.Excel;
+using System.Reflection.Metadata;
 
 namespace FIFA23.Scripts
 {
@@ -32,6 +33,23 @@ namespace FIFA23.Scripts
 
 
         }
+        
+        public string ExportToXL()
+        {
+
+            // EXPORT XL FILE FROM DataSet
+            var filename = Path.GetFileName(this.m_CareerFile.FileName);
+            foreach (DataSet dataSet in this.m_DataSetEa)
+            {
+                var wb = new XLWorkbook();
+                wb.Worksheets.Add(dataSet);
+                wb.SaveAs(filename + ".xlsx");
+                filename += "1";
+            }
+          
+          
+            return filename;
+        }
 
         
         public int Load(string InternalFile)
@@ -52,9 +70,8 @@ namespace FIFA23.Scripts
             m_FifaDb = new DbFile(this.m_FifaDbFileName, this.m_FifaDbXmlFileName);
             this.m_DataSet = this.m_FifaDb.ConvertToDataSet();
             this.m_PlayerNames = this.m_DataSet.Tables["playernames"];
-            //var wb = new XLWorkbook();
-            //wb.Worksheets.Add(this.m_DataSet);
-            //wb.SaveAs("Sqaud.xlsx");
+            
+           
             
 
 
@@ -66,7 +83,6 @@ namespace FIFA23.Scripts
             this.m_CareerFile = new CareerFile(m_InternalFile, this.m_FifaDbXmlFileName);
             m_DataSetEa = this.m_CareerFile.ConvertToDataSet();
 
-         
 
         }
 
