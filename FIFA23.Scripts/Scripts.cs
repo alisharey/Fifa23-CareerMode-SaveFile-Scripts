@@ -220,7 +220,7 @@ namespace FIFA23.Scripts
 
       
 
-        public void SetPlayerStat(string playerID, string stat, int value = 99)
+        public void SetPlayerStats(string playerID, string stat, int value = 99)
         {
             if (stat == "birthdate") value = 154482;
             foreach (DataRow _player in PlayersTable)
@@ -236,7 +236,7 @@ namespace FIFA23.Scripts
 
         }
 
-        public void SetPlayerStat(List<string> playerIDs, string stat, int value = 99)
+        public void SetTeamStats(List<string> playerIDs, string stat, int value = 99)
         {
             if (stat == "birthdate") value = 154482;
             foreach (DataRow _player in PlayersTable)
@@ -246,10 +246,25 @@ namespace FIFA23.Scripts
                 if (playerIDs.Contains(_playerID))
                 {
 
-                    _player[stat] = value;
+                   if(stat == "ALL") // all stats except birthdate for now
+                    {
+                        foreach (string _stat in PlayerStats)
+                        {
+                            if (_stat == "birthdate") continue;
+                            _player[_stat] = value;
+                        }
+                    }
+                   
+                   else //single stat
+                    {
+                        _player[stat] = value;
+                      
+                    }
                 }
             }
         }
+
+
 
 
 

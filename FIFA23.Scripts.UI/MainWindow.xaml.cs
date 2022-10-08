@@ -226,7 +226,7 @@ public partial class MainWindow : Window
 
     private void CareerScript1Button_Click(object sender, RoutedEventArgs e)
     {
-       
+        PopUpMessage("Test");
 
 
 
@@ -237,13 +237,22 @@ public partial class MainWindow : Window
 
 
     }
-    private void SquadScriptOverallButton_Click(object sender, RoutedEventArgs e) //merge this
+    private void SquadAllTeamTo99Button_Click(object sender, RoutedEventArgs e) 
     {
-      
+      if(careerInfo != null)
+        {
+            _scripts.SetTeamStats(careerInfo.MyTeamPlayerIDs, "ALL");
+            PopUpMessage("Script Done.");
+        }
     }
-    private void SquadSingleStatButton_Click(object sender, RoutedEventArgs e)
+    private void SquadAllTeamAgeto17(object sender, RoutedEventArgs e)
     {
-        
+        if (careerInfo != null)
+        {
+            _scripts.SetTeamStats(careerInfo.MyTeamPlayerIDs, "birthdate");
+            PopUpMessage("Script Done.");
+        }
+
     }
 
 
@@ -325,6 +334,7 @@ public partial class MainWindow : Window
 
     private void ValueTextBox_KeyDown(object sender, KeyEventArgs e)
     {
+        if (careerInfo == null) return;
         var value = ValueTextBox.Text;
          
 
@@ -346,7 +356,7 @@ public partial class MainWindow : Window
                     {
                         string? playerID = playerComboBox.SelectedValue as string;
                         var playerName = playerComboBox.Text;
-                        _scripts.SetPlayerStat(playerID, stat, intValue);
+                        _scripts.SetPlayerStats(playerID, stat, intValue);
                         PopUpMessage($"{playerName} {stat} is set to {intValue}");
 
                     }
@@ -361,7 +371,7 @@ public partial class MainWindow : Window
                             
                         }
 
-                        _scripts.SetPlayerStat(playerIDs, stat, intValue);
+                        _scripts.SetTeamStats(playerIDs, stat, intValue);
                         if (stat == "birthdate") intValue = 17;
                         PopUpMessage($"Entire Team {stat} is set to {intValue}");
                     }

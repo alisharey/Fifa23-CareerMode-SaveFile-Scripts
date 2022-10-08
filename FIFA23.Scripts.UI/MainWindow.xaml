@@ -43,9 +43,6 @@
                 x:Name="MainTab" 
                 BorderBrush="#FF25012B" 
                 SelectionChanged="TabablzControl_SelectionChanged" HorizontalContentAlignment="Left">
-                <!--<dragablz:TabablzControl.InterTabController>
-                    <dragablz:InterTabController/>
-                </dragablz:TabablzControl.InterTabController>-->
                 <TabItem x:Name="SquadTab" Header="Squad">
                     <Grid x:Name="Sqaud" Margin="0,15,0,0" >
                         <Grid.ColumnDefinitions>
@@ -72,14 +69,14 @@
                                 <Button x:Name="ImportCareerInfoButton"
                                          Style="{StaticResource MaterialDesignRaisedSecondaryDarkButton}" 
                                          VerticalAlignment="Top" HorizontalAlignment="Right" Height="38" Width="54" Click="ImportCareerInfoButton_Click"
-                                        ToolTip="Imports Career player stats and&#x0a;team player links to a squad file" Grid.Column="0" Margin="0,0,86,0">
+                                        ToolTip="Imports Career save to a squad file" Grid.Column="0" Margin="0,0,86,0">
                                     <materialDesign:PackIcon
                                             Kind="Import" HorizontalAlignment="Center" VerticalAlignment="Center" Width="30" Height="30" Margin="0,1,0,1"/>
 
                                 </Button>
                                 <GroupBox Style="{StaticResource MaterialDesignGroupBox}"
                                 Header="Note" Width="250" Margin="10,50,0,5"  Foreground="White" VerticalContentAlignment="Stretch" HorizontalAlignment="Left" VerticalAlignment="Bottom" >
-                                    <TextBlock Text="Import your career to a squad file then modify your players and save, you can use the new squad file to create a new career" Foreground="#FF25012B" TextWrapping="Wrap" Width="234" Margin="0,0,0,5" />
+                                    <TextBlock Text="Import your career to a squad file then edit your players stats below and save, you can  then use the new squad file to create a new career" Foreground="#FF25012B" TextWrapping="Wrap" Width="234" Margin="0,0,0,5" />
 
 
                                 </GroupBox>
@@ -106,7 +103,7 @@
                                         Style="{StaticResource MaterialDesignRaisedSecondaryDarkButton}" 
                                         materialDesign:ButtonAssist.CornerRadius="5"
                                         ToolTip="Sets all your team players&#x0a;stats to 99"
-                                        Content="Apply" Click="SquadScriptOverallButton_Click" HorizontalAlignment="Right" />
+                                        Content="Apply" Click="SquadAllTeamTo99Button_Click" HorizontalAlignment="Right" />
                                         </Grid>
                                         <Grid x:Name="AgeTo15" Margin="0,0,0,15">
                                             <Grid.ColumnDefinitions>
@@ -117,15 +114,17 @@
                                                HorizontalAlignment="Left"
                                                VerticalAlignment="Center"
                                                Style="{StaticResource MaterialDesignBody2TextBlock}"
-                                               Text="User Team Age to 15" Foreground="#FF25012B" Margin="10,0,0,0" FontFamily="Britannic Bold"
+                                               Foreground="#FF25012B" Margin="10,0,0,0" FontFamily="Britannic Bold"
+                                        
+                                    Text="User Team Age to 17"
                                         
                                     />
                                             <Button x:Name="SqauadScriptAgeButton"                               
                                         Style="{StaticResource MaterialDesignRaisedSecondaryDarkButton}" 
                                         materialDesign:ButtonAssist.CornerRadius="5"
-                                        Click="SquadSingleStatButton_Click"    
+                                        Click="SquadAllTeamAgeto17"    
                                         ToolTip="Sets all your team players&#x0a;age to 15"
-                                        Content="Apply" HorizontalAlignment="Right"/>
+                                        Content="Apply" HorizontalAlignment="Left" Height="32" Margin="180,0,0,0" VerticalAlignment="Top"/>
                                         </Grid>
 
 
@@ -173,9 +172,9 @@
                                     />
 
                                 <ToggleButton x:Name="entireTeamCheckBox"
-  Style="{StaticResource MaterialDesignSwitchDarkToggleButton}"
-  ToolTip="MaterialDesignSwitchDarkToggleButton"
-  IsChecked="False" HorizontalAlignment="Right" Margin="0,0,80,0" Click="entireTeamCheckBox_Click" />
+                                 Style="{StaticResource MaterialDesignSwitchDarkToggleButton}"
+                                 ToolTip="Toggle to edit your entire team stats"
+                                 IsChecked="False" HorizontalAlignment="Right" Margin="0,0,80,0" Click="entireTeamCheckBox_Click" Background="DarkBlue" />
 
 
                             </Grid>
@@ -186,15 +185,6 @@
 
 
 
-                        <materialDesign:Snackbar                            
-                            Grid.Row="1"                                                  
-                            Grid.ColumnSpan="2"
-                            MessageQueue="{materialDesign:MessageQueue}"
-                            x:Name="StatusSnackBar"
-                            HorizontalAlignment="Stretch" Background="#FF25012B" Foreground="#FFFFF5F5"                              
-                            ActionButtonStyle="{DynamicResource MaterialDesignFlatLightButton}"  
-                            ActionButtonPlacement="Inline"/>
-
 
 
                     </Grid>
@@ -202,9 +192,9 @@
                 <TabItem x:Name="Career" Header="Career">
                     <GroupBox x:Name="CareerScriptsBox" Style="{StaticResource MaterialDesignGroupBox}" 
                                   materialDesign:ColorZoneAssist.Mode="PrimaryDark"
-                                  Grid.Row="0" Grid.Column="0" Header="Career File Scripts" Margin="30,40,30,40" FontFamily="Algerian" FontSize="14">
+                                  Grid.Row="0" Grid.Column="0" Header="Career File Scripts" Margin="0,40,0,108" FontFamily="Algerian" FontSize="14" Width="627">
                         <StackPanel x:Name="CareerScriptsStack" >
-                            <TextBlock Text="Not Complete Yet" FontSize="16" HorizontalAlignment="Center" FontWeight="Bold"/>
+                            <TextBlock FontSize="16" HorizontalAlignment="Center" FontWeight="Bold"><Run Text="WORK IN PROGRESS"/><LineBreak/><Run/></TextBlock>
                             <Grid x:Name="Script1" Margin="0,15,0,15">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="2*"></ColumnDefinition>
@@ -257,5 +247,16 @@
 
             </TabControl>
         </Grid>
+
+        <materialDesign:Snackbar     
+           
+                            Grid.Row="1"                           
+                            Grid.ColumnSpan="2"
+                            MessageQueue="{materialDesign:MessageQueue}"
+                            x:Name="StatusSnackBar"
+                            HorizontalAlignment="Stretch" Background="#FF25012B" Foreground="#FFFFF5F5"                              
+                            ActionButtonStyle="{DynamicResource MaterialDesignFlatLightButton}"  
+                            ActionButtonPlacement="Inline"/>
+
     </Grid>
 </Window>
