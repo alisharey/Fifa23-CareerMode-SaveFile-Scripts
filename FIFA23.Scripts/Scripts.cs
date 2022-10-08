@@ -1,4 +1,6 @@
-﻿using System.Data;
+﻿using DocumentFormat.OpenXml.Wordprocessing;
+using FifaLibrary;
+using System.Data;
 using static System.Windows.Forms.AxHost;
 
 
@@ -21,7 +23,7 @@ namespace FIFA23.Scripts
             {
                    "overallrating",
                    "potential",
-                   
+                   "birthdate",
                    //Pace 
                    "acceleration",
                    "sprintspeed",
@@ -173,7 +175,7 @@ namespace FIFA23.Scripts
         public CareerInfo ExportCareerInfo()
         {
 
-            var careerInfo = new CareerInfo(myteamid, PlayersTable, Teamplayerlinks, MyTeamPlayerIDs,
+            var careerInfo = new CareerInfo(dataSetCollection[IndexOffset], myteamid, MyTeamPlayerIDs,
                 MyTeamPlayersIDtoName);
 
             return careerInfo;
@@ -184,155 +186,43 @@ namespace FIFA23.Scripts
             this.myteamid        = careerInfo.MyTeamID;
             this.MyTeamPlayerIDs = careerInfo.MyTeamPlayerIDs;
             this.MyTeamPlayersIDtoName = careerInfo.MyTeamPlayerNamesDict;
-            ImportData(careerInfo);
+            ImportDataSet(careerInfo);
 
          
 
             return 0;
         }
-        private void ImportData(CareerInfo careerInfo)
+        private void ImportDataSet(CareerInfo careerInfo)
         {
 
-            this.PlayersTable = GetPlayersTable();
-            this.Teamplayerlinks = GetTeamPlayerLinks();
 
-
-            foreach (DataRow row in careerInfo.PlayersTable)
+            foreach(DataTable savedTable in careerInfo.MainDataSet.Tables)
             {
-                PlayersTable.RemoveAt(0);
-                PlayersTable.Add(row.ItemArray);
+                string tablename = savedTable.TableName;
+                if (tablename == "manager") continue; 
+
+
+                var TargetTable = dataSetCollection[IndexOffset].Tables[tablename].Rows;
+
+                foreach(DataRow row in savedTable.Rows)
+                {
+                    TargetTable.RemoveAt(0);
+                    TargetTable.Add(row.ItemArray);
+                }
+
             }
 
-            foreach (DataRow row in careerInfo.TeamPlayerLinksTable)
-            {
-                Teamplayerlinks.RemoveAt(0);
-                Teamplayerlinks.Add(row.ItemArray);
-            }
-
-            //= careerInfo.PlayersTable;
-
+         
 
 
         }
+     
 
-        private int CheckInvalidStat(string stat)
-        {
-            int ret;
-            if (PlayerStats.Contains(stat))
-            {
-                ret = 1;
-            }
-            else if (stat == "birthdate")
-            {
-                ret = 2;
-            }
-            else
-            {
-                MessageBox.Show("Invalid Script/Stat Choice", "Invalid Choice", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                ret = -1;
-            }
-            return ret;
-        }
-        public int UserTeamSingleStatScript(string stat) // RE DO?
-        {
-            
-            var ret = CheckInvalidStat(stat);
-            if (ret == -1) return -1; //invalid stat 
-
-            foreach (DataRow _player in PlayersTable)
-            {
-                string? playerID = _player["playerid"].ToString();
-                if (MyTeamPlayerIDs.Contains(playerID))
-                {
-                    switch (ret)
-                    {
-                        case 1:
-                            _player[stat] = 99;
-                            break;
-
-                        case 2:
-                            this.season = int.Parse(GetSeasonCount()) - 1;
-                            _player[stat] = 155185 + (this.season * 365);
-                            break;
-                        default:
-                            ret = -1;
-                            return ret;
-
-                    }
-
-
-
-                }
-
-
-            }
-            return ret;
-        }
-        
-
-        public void ScriptSelector(bool IsUserTeam, List<string>? _myTeamPLayerIDs, bool IsSingleStat,string selectedStat = "")
-        {
-            var value = 99;
-            if(IsSingleStat && selectedStat == "birthdate")
-            {
-                value = 155185;
-            }
-            
-            if(IsSingleStat && IsUserTeam) // user team single stat
-            {               
-
-                this.MyTeamPlayerIDs = _myTeamPLayerIDs;
-                foreach (DataRow _player in PlayersTable)
-                {
-                   
-                    string? playerID = _player["playerid"].ToString();
-                    if (MyTeamPlayerIDs.Contains(playerID))
-                    {
-
-                        _player[selectedStat] = value;
-                    }
-                }
-
-                   
-            }
-            else if (!IsSingleStat && IsUserTeam)// user Team all stats
-            {
-                this.MyTeamPlayerIDs = _myTeamPLayerIDs;
-                foreach (DataRow _player in PlayersTable)
-                {
-                    string? playerID = _player["playerid"].ToString();
-                    if (MyTeamPlayerIDs.Contains(playerID))
-                    {
-
-                        foreach (string stat in PlayerStats)
-                        {
-                            _player[stat] = value;
-                        }
-                    }
-                }
-            }
-            else if(IsSingleStat && !IsUserTeam) // all teams single stat
-            {
-                foreach (DataRow _player in PlayersTable)
-                {
-                    _player[selectedStat] = value;
-                }
-            }           
-            else if(!IsUserTeam && !IsSingleStat) //all teams  all stats
-            {
-                foreach(DataRow _player in PlayersTable)
-                {
-                    foreach(string stat in PlayerStats)
-                    {
-                        _player[stat] = value;
-                    }
-                }
-            }
-        }
+      
 
         public void SetPlayerStat(string playerID, string stat, int value = 99)
         {
-            if (stat == "birthdate") value = 155185;            
+            if (stat == "birthdate") value = 154482;
             foreach (DataRow _player in PlayersTable)
             {
 
@@ -344,6 +234,21 @@ namespace FIFA23.Scripts
                 }
             }
 
+        }
+
+        public void SetPlayerStat(List<string> playerIDs, string stat, int value = 99)
+        {
+            if (stat == "birthdate") value = 154482;
+            foreach (DataRow _player in PlayersTable)
+            {
+
+                string? _playerID = _player["playerid"].ToString();
+                if (playerIDs.Contains(_playerID))
+                {
+
+                    _player[stat] = value;
+                }
+            }
         }
 
 

@@ -7,8 +7,6 @@ using System.Windows.Input;
 using System.Windows.Threading;
 using Microsoft.Win32;
 using System.Collections.Generic;
-
-using FIFA23.Scripts;
 using Path = System.IO.Path;
 using MessageBox = System.Windows.MessageBox;
 using Application = System.Windows.Application;
@@ -28,6 +26,8 @@ public partial class MainWindow : Window
     private CareerInfo careerInfo;
     private bool IsFileLoaded;
     private bool IsLinkLoaded;
+
+    private bool IsEntireTeam;
     private FileType _fileType;
     private string _fileName;
 
@@ -40,20 +40,13 @@ public partial class MainWindow : Window
         IsFileLoaded = false;
         IsLinkLoaded = false;
         MyTeamPlayers = new Dictionary<string, string>();
-
-        //foreach(string s in Scripts.PlayerStats)
-        //{
-        //    StatsComboBox.Items.Add(s);
-        //}
         this.StatsComboBox.ItemsSource = Scripts.PlayerStats;
-
+        
     }
 
     protected override void OnMouseLeftButtonDown(MouseButtonEventArgs e)
     {
         base.OnMouseLeftButtonDown(e);
-
-        // Begin dragging the window
         this.DragMove();
     }
 
@@ -178,7 +171,12 @@ public partial class MainWindow : Window
     private async void ImportCareerInfoButton_Click(object sender, RoutedEventArgs e)
     {
         await LoadFile("Open a Career Mode file to get the data from");
-        SaveCareerInfo();
+        if (!SaveCareerInfo())
+        {
+            PopUpMessage("Error: Try again by Loading a career file then a squad file in order.");
+            return;
+        }
+
         await LoadFile("Open the targeted squad file");
         ImportCareerInfoTask();
     }
@@ -201,7 +199,7 @@ public partial class MainWindow : Window
 
         PopUpMessage(message);
     }
-    private void SaveCareerInfo()
+    private bool SaveCareerInfo()
     {
 
         if (IsFileLoaded && _fileHandling.Type == FileType.Career)
@@ -212,11 +210,13 @@ public partial class MainWindow : Window
             playerComboBox.SelectedValuePath = "Key";
             playerComboBox.DisplayMemberPath = "Value";
 
+            return true;
+
             //PopUpMessage("Career info saved, load a squad file to import the info.");
         }
         else
         {
-            return;
+            return false;
             //PopUpMessage(CareerFileError);
         }
 
@@ -226,84 +226,24 @@ public partial class MainWindow : Window
 
     private void CareerScript1Button_Click(object sender, RoutedEventArgs e)
     {
-        var message = string.Empty;
-        if (IsFileLoaded && _fileHandling.Type == FileType.Career)
-        {
-            //_scripts.TempScriptForAllStats();
-            var ret = _scripts.UserTeamSingleStatScript("potential");
-
-
-            if (ret != -1) message = "Script Potential to 99 has been executed.";
-            else
-            {
-                message = $"Error ret = {ret}";
-            }
-        }
-        else message = CareerFileError;
-        PopUpMessage(message);
+       
 
 
 
 
     }
     private void CareerScript2Button_Click(object sender, RoutedEventArgs e)
-    {
-        var message = string.Empty;
-        if (IsFileLoaded && _fileHandling.Type == FileType.Career)
-        {
-            var ret = _scripts.UserTeamSingleStatScript("birthdate");
-            if (ret != -1) message = "Script MyTeamPlayerAgeTo15 executed.";
-            else
-            {
-                message = $"Error ret = {ret}";
-            }
-        }
-        else message = CareerFileError;
-
-        PopUpMessage(message);
+    {      
 
 
     }
-    private void SquadScriptOverallButton_Click(object sender, RoutedEventArgs e)
+    private void SquadScriptOverallButton_Click(object sender, RoutedEventArgs e) //merge this
     {
-        if (IsFileLoaded && _fileType == FileType.Squad)
-        {
-            if (careerInfo != null)
-            {
-                _scripts.ScriptSelector(true, careerInfo.MyTeamPlayerIDs, false);
-                PopUpMessage("Script Done.");
-            }
-            else
-            {
-                PopUpMessage("Import Career Info First");
-            }
-        }
+      
     }
     private void SquadSingleStatButton_Click(object sender, RoutedEventArgs e)
     {
-        var stat = string.Empty;
-        var _buttonName = (sender as Button).Name;
-
-        if (_buttonName == "SqauadScriptAgeButton") stat = "birthdate";
-        else return;
-
-        if (IsFileLoaded && _fileType == FileType.Squad)
-        {
-
-            if (careerInfo != null)
-            {
-                _scripts.ScriptSelector(true,
-                    careerInfo.MyTeamPlayerIDs,
-                    true,
-                    stat);
-
-                PopUpMessage("Script Done.");
-            }
-            else
-            {
-                PopUpMessage("Import Career Info First");
-            }
-        }
+        
     }
 
 
@@ -367,12 +307,7 @@ public partial class MainWindow : Window
         Application.Current.Shutdown();
     }
 
-    private void playerComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
-    {
-        var combo = sender as ComboBox;
-        if (combo.SelectedValue == null) return;
-        //PopUpMessage($"{combo.SelectedItem}, {combo.SelectedValue}");  
-    }
+
 
     private void NumericOnly(System.Object sender, System.Windows.Input.TextCompositionEventArgs e)
     {
@@ -391,28 +326,71 @@ public partial class MainWindow : Window
     private void ValueTextBox_KeyDown(object sender, KeyEventArgs e)
     {
         var value = ValueTextBox.Text;
-        if (e.Key == Key.Enter && !string.IsNullOrEmpty(value) && StatsComboBox.SelectedValue != null
-            && playerComboBox.SelectedValue != null)
+         
+
+
+        try
         {
 
-            var intValue = int.Parse(value);
-            var stat = (string)StatsComboBox.SelectedValue;
-            var playerID = (string)playerComboBox.SelectedValue;
-
-
-            if (intValue >= 1 && intValue <= 99)
+            if (e.Key == Key.Enter && !string.IsNullOrWhiteSpace(value) && StatsComboBox.SelectedValue != null
+           && (playerComboBox.SelectedValue != null || IsEntireTeam))
             {
-                _scripts.SetPlayerStat(playerID, stat, intValue);
-                PopUpMessage($"{playerID} {stat} is set to {intValue}");
+
+                var intValue = int.Parse(value);
+                var stat = (string)StatsComboBox.SelectedValue;
+
+
+                if (intValue >= 1 && intValue <= 99)
+                {
+                    if (!IsEntireTeam)
+                    {
+                        string? playerID = playerComboBox.SelectedValue as string;
+                        var playerName = playerComboBox.Text;
+                        _scripts.SetPlayerStat(playerID, stat, intValue);
+                        PopUpMessage($"{playerName} {stat} is set to {intValue}");
+
+                    }
+                    else // entire team
+                    {
+                        var playerIDs = new List<string>();
+                        foreach (KeyValuePair<string, string> kvp in playerComboBox.Items)
+                        {
+                         
+                            playerIDs.Add(kvp.Key);
+                           
+                            
+                        }
+
+                        _scripts.SetPlayerStat(playerIDs, stat, intValue);
+                        if (stat == "birthdate") intValue = 17;
+                        PopUpMessage($"Entire Team {stat} is set to {intValue}");
+                    }
+
+                }
+
+                else
+                {
+                    PopUpMessage($"{stat} value is Invalid");
+                }
+
+
+
             }
+        }
+        catch (Exception ex)
+        {
+            PopUpMessage($"Error: {ex.Message}");
+        }
 
-            else
-            {
-                PopUpMessage($"{stat} value is Invalid");
-            }
+    }
 
-
-
+    private void entireTeamCheckBox_Click(object sender, RoutedEventArgs e)
+    {
+      if(entireTeamCheckBox.IsChecked != null)
+        {
+            playerComboBox.IsEnabled = (bool)(!entireTeamCheckBox.IsChecked);
+            IsEntireTeam = !playerComboBox.IsEnabled;
         }
     }
+            
 }
