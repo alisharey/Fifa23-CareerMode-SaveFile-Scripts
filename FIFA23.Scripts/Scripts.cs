@@ -18,7 +18,7 @@ namespace FIFA23.Scripts
         private int season;
         private FileType fileType;
         private List<string> MyTeamPlayerIDs;
-        private FileHandling File;
+        private FileIO File;
         public static List<string> PlayerStats { get; private set; } = new List<string>
             {
                    "overallrating",
@@ -75,7 +75,7 @@ namespace FIFA23.Scripts
         };
         private Dictionary<string, string> MyTeamPlayersIDtoName;
 
-        public Scripts(FileHandling _file)
+        public Scripts(FileIO _file)
         {
             this.File = _file;
             this.dataSetCollection = _file.m_DataSetEa;

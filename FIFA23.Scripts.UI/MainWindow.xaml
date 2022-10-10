@@ -42,7 +42,7 @@
                 Style="{StaticResource MaterialDesignFilledTabControl}"
                 x:Name="MainTab" 
                 BorderBrush="#FF25012B" 
-                SelectionChanged="TabablzControl_SelectionChanged" HorizontalContentAlignment="Left">
+                SelectionChanged="TabablzControl_SelectionChanged" HorizontalContentAlignment="Left" RenderTransformOrigin="0.435,0.554">
                 <TabItem x:Name="SquadTab" Header="Squad">
                     <Grid x:Name="Sqaud" Margin="0,15,0,0" >
                         <Grid.ColumnDefinitions>
@@ -191,27 +191,28 @@
                 </TabItem>
                 <TabItem x:Name="Career" Header="Career">
                     <GroupBox x:Name="CareerScriptsBox" Style="{StaticResource MaterialDesignGroupBox}" 
-                                  materialDesign:ColorZoneAssist.Mode="PrimaryDark"
-                                  Grid.Row="0" Grid.Column="0" Header="Career File Scripts" Margin="0,40,0,108" FontFamily="Algerian" FontSize="14" Width="627">
+                                  materialDesign:ColorZoneAssist.Mode="PrimaryMid"
+                                  Grid.Row="0" Grid.Column="0" Header="Career File Scripts" Margin="30,40,0,0" FontFamily="Algerian" FontSize="14" Width="368" HorizontalAlignment="Left" VerticalAlignment="Top">
                         <StackPanel x:Name="CareerScriptsStack" >
                             <TextBlock FontSize="16" HorizontalAlignment="Center" FontWeight="Bold"><Run Text="WORK IN PROGRESS"/><LineBreak/><Run/></TextBlock>
                             <Grid x:Name="Script1" Margin="0,15,0,15">
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="2*"></ColumnDefinition>
-                                    <ColumnDefinition Width="*"></ColumnDefinition>
+                                    <ColumnDefinition Width="156*"></ColumnDefinition>
+                                    <ColumnDefinition Width="250*"/>
+                                    <ColumnDefinition Width="203*"></ColumnDefinition>
                                 </Grid.ColumnDefinitions>
                                 <TextBlock Grid.Column="0"
                                                HorizontalAlignment="Left"
                                                VerticalAlignment="Center"
                                                Style="{StaticResource MaterialDesignBody2TextBlock}"
-                                               Text="User Team Potenial to 99" Foreground="#FF25012B" Margin="10,0,0,0"
+                                               Text="User Team Potenial to 99" Foreground="#FF25012B" Margin="10,0,0,0" Grid.ColumnSpan="2" Height="18" Width="184"
                                         
                                     />
                                 <Button x:Name="CareerScript1Button"                               
-                                        Style="{StaticResource MaterialDesignRaisedDarkButton}" 
+                                        Style="{StaticResource MaterialDesignRaisedSecondaryButton}" 
                                         materialDesign:ButtonAssist.CornerRadius="5"
                                         ToolTip="Sets all your team players&#x0a;potential to 99"
-                                        Content="Apply" Margin="0,0,130,0" Click="CareerScript1Button_Click" HorizontalAlignment="Right"/>
+                                        Content="Apply" Margin="143,0,0,0" Click="CareerScript1Button_Click" HorizontalAlignment="Left" Grid.Column="1" Width="76" Grid.ColumnSpan="2"/>
                             </Grid>
                             <Grid x:Name="Script2" Margin="0,0,0,15">
                                 <Grid.ColumnDefinitions>
@@ -222,15 +223,15 @@
                                                HorizontalAlignment="Left"
                                                VerticalAlignment="Center"
                                                Style="{StaticResource MaterialDesignBody2TextBlock}"
-                                               Text="User Team Age to 15" Foreground="#FF25012B" Margin="10,0,0,0"
+                                               Text="User Team Age to 17" Foreground="#FF25012B" Margin="10,0,0,0"
                                         
                                     />
                                 <Button x:Name="CareerScrip2Button"                               
-                                        Style="{StaticResource MaterialDesignRaisedDarkButton}" 
+                                        Style="{StaticResource MaterialDesignRaisedSecondaryButton}" 
                                         materialDesign:ButtonAssist.CornerRadius="5"
                                             
                                         ToolTip="Sets all your team players&#x0a;age to 15"
-                                        Content="Apply" Margin="0,0,130,0" Click="CareerScript2Button_Click" HorizontalAlignment="Right"/>
+                                        Content="Apply" Margin="0,-5,41,5" Click="CareerScript2Button_Click" HorizontalAlignment="Right" Grid.ColumnSpan="2"/>
                             </Grid>
 
                         </StackPanel>

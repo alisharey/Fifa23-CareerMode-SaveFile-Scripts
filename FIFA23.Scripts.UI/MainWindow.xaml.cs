@@ -21,7 +21,7 @@ public partial class MainWindow : Window
 {
     const string CareerFileError = "Error: Load Career File First";
 
-    private FileHandling _fileHandling;
+    private FileIO _fileIO;
     private FIFA23.Scripts.Scripts _scripts;
     private CareerInfo careerInfo;
     private bool IsFileLoaded;
@@ -104,10 +104,10 @@ public partial class MainWindow : Window
         PopUpMessage("Loading..");
         await Task.Run(() =>
         {
-            _fileHandling = new FileHandling(this._fileType);
-            _fileHandling.Load(_fileName);
-            _fileHandling.LoadDb();
-            _scripts = new Scripts(_fileHandling);
+            _fileIO = new FileIO(this._fileType);
+            _fileIO.Load(_fileName);
+            _fileIO.LoadDb();
+            _scripts = new Scripts(_fileIO);
             this.IsFileLoaded = true;
 
         });
@@ -133,7 +133,7 @@ public partial class MainWindow : Window
                 PopUpMessage("saving..");
                 await Task.Run(() =>
                 {
-                    _fileHandling.Save();
+                    _fileIO.Save();
                 });
 
                 message = "Save Complete";
@@ -157,7 +157,7 @@ public partial class MainWindow : Window
         if (IsFileLoaded)
         {
 
-            await Task.Run(() => { filename = _fileHandling.ExportToXL(); });
+            await Task.Run(() => { filename = _fileIO.ExportToXL(); });
 
         }
         else
@@ -202,7 +202,7 @@ public partial class MainWindow : Window
     private bool SaveCareerInfo()
     {
 
-        if (IsFileLoaded && _fileHandling.Type == FileType.Career)
+        if (IsFileLoaded && _fileIO.Type == FileType.Career)
         {
             careerInfo = _scripts.ExportCareerInfo();
 
@@ -226,16 +226,28 @@ public partial class MainWindow : Window
 
     private void CareerScript1Button_Click(object sender, RoutedEventArgs e)
     {
-        PopUpMessage("Test");
+        if (careerInfo != null)
+        {
+            _scripts.SetTeamStats(careerInfo.MyTeamPlayerIDs, "potential");
+            PopUpMessage("Script Done.");
+        }
 
+        else PopUpMessage("Load a career file first.");
+
+       
 
 
 
     }
     private void CareerScript2Button_Click(object sender, RoutedEventArgs e)
-    {      
+    {
 
-
+        if (careerInfo != null)
+        {
+            _scripts.SetTeamStats(careerInfo.MyTeamPlayerIDs, "birthdate");
+            PopUpMessage("Script Done.");
+        }
+        else PopUpMessage("Load a career file first.");
     }
     private void SquadAllTeamTo99Button_Click(object sender, RoutedEventArgs e) 
     {

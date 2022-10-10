@@ -10,7 +10,7 @@ using System.Reflection.Metadata;
 
 namespace FIFA23.Scripts
 {
-    public class FileHandling
+    public class FileIO
     {
         string m_FifaDbFileName;
         string m_FifaDbXmlFileName;
@@ -24,7 +24,7 @@ namespace FIFA23.Scripts
         public FileType Type { get; set; }
         
         
-        public FileHandling(FileType fileType)
+        public FileIO(FileType fileType)
 
         {
             this.Type = fileType;
@@ -86,7 +86,7 @@ namespace FIFA23.Scripts
 
         }
 
-        public void SaveEA()
+        private void SaveEA()
         {
 
             //Console.WriteLine(text);         
